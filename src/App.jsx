@@ -478,6 +478,53 @@ const analyzeTone = (rgb) => {
   };
 };
 
+// 実測した肌(・手のひら)のトーンから4シーズンを判定する
+// 黄み/赤みバランス(warm)と明るさ(brightness)の2軸で、各シーズンの基準点との近さをスコア化する
+const localDiagnose = (skinTone, palmTone) => {
+  const mix = (key, skinWeight = 0.7) =>
+    palmTone && typeof palmTone[key] === "number" && typeof skinTone[key] === "number"
+      ? skinTone[key] * skinWeight + palmTone[key] * (1 - skinWeight)
+      : skinTone[key];
+
+  const warm = mix("warm"); // 0(ブルベ寄り)〜100(イエベ寄り)
+  const brightPct = Math.max(0, Math.min(100, ((mix("brightness") - 0.45) / 0.5) * 100)); // 明るさ0〜100
+
+  const anchors = {
+    spring: { x: 82, y: 78 },
+    autumn: { x: 82, y: 30 },
+    summer: { x: 18, y: 72 },
+    winter: { x: 18, y: 28 },
+  };
+  const point = { x: warm, y: brightPct };
+
+  const distances = {};
+  for (const k in anchors) {
+    const dx = point.x - anchors[k].x, dy = point.y - anchors[k].y;
+    distances[k] = Math.sqrt(dx * dx + dy * dy) + 1; // +1 はゼロ割防止
+  }
+  let sum = 0;
+  const inv = {};
+  for (const k in distances) { inv[k] = 1 / distances[k]; sum += inv[k]; }
+  const seasonScores = {};
+  for (const k in inv) seasonScores[k] = Math.round((inv[k] / sum) * 100);
+
+  const season = Object.keys(seasonScores).reduce((a, b) => (seasonScores[b] > seasonScores[a] ? b : a));
+
+  const warmScore = Math.round(warm);
+  const coolScore = 100 - warmScore;
+
+  const undertone =
+    warmScore >= 50
+      ? `黄み(イエロー)が優勢な暖色系の肌タイプです。明るさの測定値から、${
+          season === "spring" ? "明るくクリアな『スプリング』" : "深みのある『オータム』"
+        }寄りと判定しました。`
+      : `赤み・青み(ブルー)が優勢な寒色系の肌タイプです。明るさの測定値から、${
+          season === "summer" ? "ソフトで涼しげな『サマー』" : "コントラストのはっきりした『ウィンター』"
+        }寄りと判定しました。`;
+
+  return { season, confidence: seasonScores[season], undertone, warmScore, coolScore, seasonScores };
+};
+
 // ---------------- 診断タブ(パーツ別ステップ撮影) ----------------
 const STEPS = [
   { id: "skin", type: "photo", title: "肌の色(顔全体)", guide: "正面から、すっぴんに近い状態で。自然光の下だと肌の色が正確に写ります。", required: true, capture: "user" },

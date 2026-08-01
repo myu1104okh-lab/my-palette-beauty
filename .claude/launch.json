@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "my-palette-beauty-dev",
+      "runtimeExecutable": "C:\\Users\\user\\Downloads\\my-palette-beauty\\.claude\\run-dev.cmd",
+      "runtimeArgs": [],
+      "port": 5173
+    }
+  ]
+}
