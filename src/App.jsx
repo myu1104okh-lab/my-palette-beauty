@@ -604,6 +604,7 @@ function DiagnosisTab({ myType, onDiagnosed, ratingOf, favs, toggleFav, onGoRank
   const [facing, setFacing] = useState("user");
   const [camError, setCamError] = useState(false);
   const fileRef = useRef(null);
+  const libraryFileRef = useRef(null); // capture属性なし。写真ライブラリから選ぶ用
   const videoRef = useRef(null);
   const streamRef = useRef(null);
 
@@ -639,7 +640,7 @@ function DiagnosisTab({ myType, onDiagnosed, ratingOf, favs, toggleFav, onGoRank
     } catch (e) {
       // カメラが使えない環境では写真選択にフォールバック
       setCamError(true);
-      fileRef.current?.click();
+      libraryFileRef.current?.click();
     }
   };
 
@@ -798,6 +799,8 @@ function DiagnosisTab({ myType, onDiagnosed, ratingOf, favs, toggleFav, onGoRank
           {step.type === "photo" ? (
             <>
               <input ref={fileRef} type="file" accept="image/*" capture={step.capture} style={{ display: "none" }} onChange={(e) => { handleFile(e.target.files[0]); e.target.value = ""; }} />
+              {/* capture属性なし: 一部端末ではcapture付きinputだとカメラしか開けず写真ライブラリを選べないため、専用のinputを用意する */}
+              <input ref={libraryFileRef} type="file" accept="image/*" style={{ display: "none" }} onChange={(e) => { handleFile(e.target.files[0]); e.target.value = ""; }} />
               <div
                 onClick={() => openCamera(step.capture)}
                 style={{
@@ -817,7 +820,7 @@ function DiagnosisTab({ myType, onDiagnosed, ratingOf, favs, toggleFav, onGoRank
                 )}
               </div>
               <button
-                onClick={() => fileRef.current?.click()}
+                onClick={() => libraryFileRef.current?.click()}
                 style={{ background: "none", border: "none", color: "#B0A99F", fontSize: 11.5, textDecoration: "underline", marginTop: 10 }}
               >
                 カメラを使わず写真を選ぶ
