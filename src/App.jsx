@@ -1376,6 +1376,7 @@ function ReviewTab({ reviews, addReview, myType, storageReady }) {
   const [text, setText] = useState("");
   const [name, setName] = useState("");
   const [posted, setPosted] = useState(false);
+  const listRef = useRef(null);
 
   const submit = () => {
     if (!text.trim()) return;
@@ -1391,6 +1392,8 @@ function ReviewTab({ reviews, addReview, myType, storageReady }) {
     setText("");
     setPosted(true);
     setTimeout(() => setPosted(false), 2500);
+    // 一覧はフォームより下にあり画面外なので、投稿した口コミまでスクロールして見せる
+    setTimeout(() => listRef.current?.scrollIntoView({ block: "start" }), 100);
   };
 
   const productName = (id) => {
@@ -1402,7 +1405,7 @@ function ReviewTab({ reviews, addReview, myType, storageReady }) {
     <div className="fade-up">
       <h2 style={{ fontFamily: font.display, fontSize: 18, textAlign: "center", margin: "4px 0 14px" }}>みんなの口コミ</h2>
       <p style={{ fontSize: 11.5, color: "#9A938A", textAlign: "center", margin: "0 0 16px", lineHeight: 1.8 }}>
-        投稿した口コミはこの端末に保存されます
+        投稿した口コミは下の一覧に表示されます(この端末にのみ保存されます)
       </p>
 
       {/* 投稿フォーム */}
@@ -1458,6 +1461,9 @@ function ReviewTab({ reviews, addReview, myType, storageReady }) {
       </div>
 
       {/* 口コミ一覧 */}
+      <h3 ref={listRef} style={{ fontFamily: font.display, fontSize: 15, margin: "0 0 10px", scrollMarginTop: 12 }}>
+        投稿された口コミ{reviews.length > 0 && `(${reviews.length}件)`}
+      </h3>
       <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
         {reviews.length === 0 && (
           <p style={{ textAlign: "center", fontSize: 13, color: "#9A938A", padding: "20px 0" }}>
