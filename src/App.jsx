@@ -103,35 +103,35 @@ const PRODUCTS = [
   // リップ
   { id: "p01", name: "ステイオンバームルージュ 09 マスカレードバッド", brand: "キャンメイク", cat: "リップ", price: 638, seasons: ["autumn", "winter"], base: 4.5, baseCount: 320, color: "#A13B4C", img: "https://www.canmake.com/wp-content/uploads/2025/08/D02_03_col09_img_00.jpg" },
   { id: "p02", name: "ラスティングステイリップカラー 01 ローズレッド", brand: "セザンヌ", cat: "リップ", price: 715, seasons: ["summer", "winter"], base: 4.3, baseCount: 280, color: "#C33C4E", img: "https://www.cezanne.co.jp/uploads/lineup/4939553530350/img1_01.png" },
-  { id: "p03", name: "テクノサテン ジェル リップスティック 403 Augmented Nude", brand: "資生堂", cat: "リップ", price: 4400, seasons: ["spring", "autumn"], base: 4.4, baseCount: 152, color: "#C48374", img: "https://imagecdn.shiseido.co.jp/c!/a=0,f=webp:jpg/resources/sw/products/img/20230221/SHOHIN_PL_C1_G68601.jpg" },
-  { id: "p04", name: "リップモンスター 03 陽炎", brand: "KATE", cat: "リップ", price: 1540, seasons: ["autumn", "spring"], base: 4.6, baseCount: 431, color: "#C1543A", img: "https://kao-h.assetsadobe3.com/is/image/content/dam/sites/kao/www-kao-kirei-com/jp/ja/item/kbb/kate/25991344/GG01.jpg" },
+  { id: "p03", name: "テクノサテン ジェル リップスティック 403 Augmented Nude", brand: "資生堂", cat: "リップ", price: 4400, seasons: ["spring", "autumn"], base: 4.4, baseCount: 152, color: "#C48374", img: "https://imagecdn.shiseido.co.jp/c!/a=0,w=1000,f=webp:jpg/resources/sw/products/img/20230221/SHOHIN_PL_C1_G68601.jpg" },
+  { id: "p04", name: "リップモンスター 03 陽炎", brand: "KATE", cat: "リップ", price: 1540, seasons: ["autumn", "spring"], base: 4.6, baseCount: 431, color: "#C1543A", img: "https://kao-h.assetsadobe3.com/is/image/content/dam/sites/kao/www-kao-kirei-com/jp/ja/item/kbb/kate/25991344/GG01.jpg?wid=1000" },
   { id: "p05", name: "リップティント N 06 ピンクレッド", brand: "オペラ", cat: "リップ", price: 1760, seasons: ["summer", "winter"], base: 4.5, baseCount: 389, color: "#E0526B", img: "https://www.opera-net.jp/_wpcms/wp-content/themes/opera/asset/img/tint/single_top@2x.jpg" },
   // チーク
   { id: "p06", name: "グロウフルールチークス 01 ピーチフルール", brand: "キャンメイク", cat: "チーク", price: 880, seasons: ["spring", "summer"], base: 4.2, baseCount: 410, color: "#FFA98C", img: "https://www.canmake.com/wp-content/uploads/2025/08/B00_72_col01_img_01.jpg" },
   { id: "p07", name: "ナチュラル チークN 01 ピーチピンク", brand: "セザンヌ", cat: "チーク", price: 396, seasons: ["spring"], base: 4.1, baseCount: 274, color: "#FFB6A3", img: "https://www.cezanne.co.jp/uploads/lineup/4939553002918/img1_01.png" },
-  { id: "p08", name: "スキニーマッチ チーク", brand: "エクセル", cat: "チーク", price: 1650, seasons: ["spring", "summer"], base: 4.5, baseCount: 155, color: "#E8879A", img: "https://noevirgroup.jp/excel/img/goods/S/48815.jpg" },
+  { id: "p08", name: "スキニーマッチ チーク", brand: "エクセル", cat: "チーク", price: 1650, seasons: ["spring", "summer"], base: 4.5, baseCount: 155, color: "#E8879A", img: "https://noevirgroup.jp/excel/img/goods/L/48815.jpg" },
   { id: "p09", name: "インナーグロウ チークパウダー 03 Floating Rose", brand: "資生堂", cat: "チーク", price: 4400, seasons: ["summer"], base: 4.0, baseCount: 96, color: "#E893A8", img: "https://image.rakuten.co.jp/brandshiseido/cabinet/prd/smu0015/rank_smu0015.jpg" },
   // アイシャドウ
   { id: "p10", name: "パーフェクトマルチアイズ 03 アンティークテラコッタ", brand: "キャンメイク", cat: "アイシャドウ", price: 858, seasons: ["autumn"], base: 4.7, baseCount: 502, color: "#B06A4E", img: "https://www.canmake.com/wp-content/uploads/2025/08/C01_20_col03_img_00-1.jpg" },
   { id: "p11", name: "トーンアップアイシャドウ 01 ナチュラルブラウン", brand: "セザンヌ", cat: "アイシャドウ", price: 638, seasons: ["autumn", "spring"], base: 4.4, baseCount: 318, color: "#A67C58", img: "https://www.cezanne.co.jp/uploads/lineup/4939553040149/img1_01.png" },
-  { id: "p12", name: "スキニーリッチシャドウ N", brand: "エクセル", cat: "アイシャドウ", price: 1650, seasons: ["autumn", "spring"], base: 4.6, baseCount: 446, color: "#C9A063", img: "https://noevirgroup.jp/excel/img/goods/S/78303.jpg" },
-  { id: "p13", name: "メロウブラウンアイズ BR-1 ソフトブラウン", brand: "KATE", cat: "アイシャドウ", price: 1320, seasons: ["autumn", "spring"], base: 4.3, baseCount: 217, color: "#9C7259", img: "https://kao-h.assetsadobe3.com/is/image/content/dam/sites/kanebo/www-nomorerules-net/pickup/mellow_brown_eyes/mellow_brown_eyes-mellow_brown_eyes-thumb-m-260421.png" },
+  { id: "p12", name: "スキニーリッチシャドウ N", brand: "エクセル", cat: "アイシャドウ", price: 1650, seasons: ["autumn", "spring"], base: 4.6, baseCount: 446, color: "#C9A063", img: "https://noevirgroup.jp/excel/img/goods/L/78303.jpg" },
+  { id: "p13", name: "メロウブラウンアイズ BR-1 ソフトブラウン", brand: "KATE", cat: "アイシャドウ", price: 1320, seasons: ["autumn", "spring"], base: 4.3, baseCount: 217, color: "#9C7259", img: "https://kao-h.assetsadobe3.com/is/image/content/dam/sites/kanebo/www-nomorerules-net/pickup/mellow_brown_eyes/mellow_brown_eyes-mellow_brown_eyes-thumb-m-260421.png?wid=1000" },
   // ノーズシャドウ
   { id: "p14", name: "フィットスタイラーアイブロウ 01 ナチュラルブラウン", brand: "キャンメイク", cat: "ノーズシャドウ", price: 880, seasons: ["spring", "autumn"], base: 4.3, baseCount: 265, color: "#C9A98A", img: "https://www.canmake.com/wp-content/uploads/2025/08/C04_199_col01_img_01.jpg" },
   { id: "p15", name: "アイブロウ&シェードパウダー 01 キャメルブラウン", brand: "セザンヌ", cat: "ノーズシャドウ", price: 693, seasons: ["autumn"], base: 4.5, baseCount: 388, color: "#B98860", img: "https://www.cezanne.co.jp/uploads/lineup/4939553530534/img1_01.png" },
-  { id: "p16", name: "デザイニングアイブロウ3D(デュアルコントゥアカラー) EX-5", brand: "KATE", cat: "ノーズシャドウ", price: 1430, seasons: ["summer", "winter"], base: 4.2, baseCount: 174, color: "#8A6A5C", img: "https://kao-h.assetsadobe3.com/is/image/content/dam/sites/kao/www-kao-kirei-com/jp/ja/item/kbb/kate/25504136/GG01.jpg" },
+  { id: "p16", name: "デザイニングアイブロウ3D(デュアルコントゥアカラー) EX-5", brand: "KATE", cat: "ノーズシャドウ", price: 1430, seasons: ["summer", "winter"], base: 4.2, baseCount: 174, color: "#8A6A5C", img: "https://kao-h.assetsadobe3.com/is/image/content/dam/sites/kao/www-kao-kirei-com/jp/ja/item/kbb/kate/25504136/GG01.jpg?wid=1000" },
   // アイライナー
   { id: "p17", name: "クリーミータッチライナー ディープブラック", brand: "キャンメイク", cat: "アイライナー", price: 715, seasons: ["spring", "summer", "autumn", "winter"], base: 4.6, baseCount: 521, color: "#1A1A1A", img: "https://www.canmake.com/wp-content/uploads/2025/08/C05_36_col01_img_00.jpg" },
   { id: "p18", name: "ジェルアイライナー 10 ブラック", brand: "セザンヌ", cat: "アイライナー", price: 550, seasons: ["spring", "summer", "autumn", "winter"], base: 4.3, baseCount: 296, color: "#1C1C1C", img: "https://www.cezanne.co.jp/uploads/lineup/4939553040453/img1_10.png" },
-  { id: "p19", name: "スーパーシャープライナー EX4.0 BK-1 漆黒ブラック", brand: "KATE", cat: "アイライナー", price: 1430, seasons: ["spring", "summer", "autumn", "winter"], base: 4.4, baseCount: 233, color: "#0D0D0D", img: "https://kao-h.assetsadobe3.com/is/image/content/dam/sites/kanebo/www-nomorerules-net/pickup/super_sharp_liner_ex4/super_sharp_liner_ex4-super_sharp_liner_ex4-thumb-m.png" },
-  { id: "p20", name: "スキニーリッチライナー RL04 テラコッタ", brand: "エクセル", cat: "アイライナー", price: 1430, seasons: ["autumn", "spring"], base: 4.5, baseCount: 189, color: "#B5613C", img: "https://noevirgroup.jp/excel/img/goods/S/48849.jpg" },
+  { id: "p19", name: "スーパーシャープライナー EX4.0 BK-1 漆黒ブラック", brand: "KATE", cat: "アイライナー", price: 1430, seasons: ["spring", "summer", "autumn", "winter"], base: 4.4, baseCount: 233, color: "#0D0D0D", img: "https://kao-h.assetsadobe3.com/is/image/content/dam/sites/kanebo/www-nomorerules-net/pickup/super_sharp_liner_ex4/super_sharp_liner_ex4-super_sharp_liner_ex4-thumb-m.png?wid=1000" },
+  { id: "p20", name: "スキニーリッチライナー RL04 テラコッタ", brand: "エクセル", cat: "アイライナー", price: 1430, seasons: ["autumn", "spring"], base: 4.5, baseCount: 189, color: "#B5613C", img: "https://noevirgroup.jp/excel/img/goods/L/48849.jpg" },
   // マスカラ
   { id: "p21", name: "クイックラッシュカーラー BK ブラック", brand: "キャンメイク", cat: "マスカラ", price: 748, seasons: ["spring", "summer", "autumn", "winter"], base: 4.4, baseCount: 465, color: "#1A1A1A", img: "https://www.canmake.com/wp-content/uploads/2025/08/C02_40_col00_img_00.jpg" },
-  { id: "p22", name: "ラッシュバースト BK-1 ブラック", brand: "KATE", cat: "マスカラ", price: 1540, seasons: ["spring", "summer", "autumn", "winter"], base: 4.2, baseCount: 201, color: "#151515", img: "https://kao-h.assetsadobe3.com/is/image/content/dam/sites/kanebo/www-nomorerules-net/pickup/lash_burst/lash_burst-lash_burst-thumb-m.png" },
+  { id: "p22", name: "ラッシュバースト BK-1 ブラック", brand: "KATE", cat: "マスカラ", price: 1540, seasons: ["spring", "summer", "autumn", "winter"], base: 4.2, baseCount: 201, color: "#151515", img: "https://kao-h.assetsadobe3.com/is/image/content/dam/sites/kanebo/www-nomorerules-net/pickup/lash_burst/lash_burst-lash_burst-thumb-m.png?wid=1000" },
   // ベースメイク
   { id: "p23", name: "マーメイドスキンジェルUV 01 クリア", brand: "キャンメイク", cat: "ベースメイク", price: 770, seasons: ["spring", "summer", "autumn", "winter"], base: 4.5, baseCount: 587, color: "#CFE9E5", img: "https://www.canmake.com/wp-content/uploads/2025/08/A06_67_col01_img_00-2.jpg" },
   { id: "p24", name: "皮脂テカリ防止下地 ピンクベージュ", brand: "セザンヌ", cat: "ベースメイク", price: 660, seasons: ["spring", "summer"], base: 4.4, baseCount: 634, color: "#F3C9C2", img: "https://www.cezanne.co.jp/uploads/lineup/4939553040057/img1_pk.png" },
-  { id: "p25", name: "エッセンス スキングロウ ファンデーション 240 Quartz", brand: "資生堂", cat: "ベースメイク", price: 7590, seasons: ["spring", "summer", "autumn", "winter"], base: 4.6, baseCount: 312, color: "#D9A98C", img: "https://imagecdn.shiseido.co.jp/c!/a=0,f=webp:jpg/resources/sw/products/img/20230622/SHOHIN_PL_C1_G80101.jpg" },
+  { id: "p25", name: "エッセンス スキングロウ ファンデーション 240 Quartz", brand: "資生堂", cat: "ベースメイク", price: 7590, seasons: ["spring", "summer", "autumn", "winter"], base: 4.6, baseCount: 312, color: "#D9A98C", img: "https://imagecdn.shiseido.co.jp/c!/a=0,w=1000,f=webp:jpg/resources/sw/products/img/20230622/SHOHIN_PL_C1_G80101.jpg" },
 ];
 
 // 商品名+ブランドで楽天市場を検索するURL(特定の商品ページを推測せず、常に有効な検索結果URLを組み立てる)
@@ -163,7 +163,8 @@ const ProductVisual = ({ product, size = 60 }) => {
         alt={product.name}
         loading="lazy"
         onError={() => setImgFailed(true)} // 外部サイトの画像が読み込めない場合はイラストにフォールバック
-        style={{ width: size, height: size * 1.15, objectFit: "cover", borderRadius: 10, flexShrink: 0, background: "#F0EDE8" }}
+        // contain: 商品写真は余白付きで撮られているため、coverだと商品の端が切れてしまう
+        style={{ width: size, height: size * 1.15, objectFit: "contain", borderRadius: 10, flexShrink: 0, background: "#FFF" }}
       />
     );
   }
@@ -1072,7 +1073,7 @@ function DiagnosisTab({ myType, onDiagnosed, ratingOf, favs, toggleFav, onGoRank
                       >
                         {favs.includes(p.id) ? "♥" : "♡"}
                       </button>
-                      <ProductVisual product={p} size={44} />
+                      <ProductVisual product={p} size={62} />
                       <div style={{ flex: 1, minWidth: 0, paddingRight: 20 }}>
                         <p style={{ fontSize: 10, color: "#9A938A", margin: 0 }}>{p.brand} / {p.cat}</p>
                         <p style={{ fontSize: 12.5, fontWeight: 700, margin: "2px 0 3px", lineHeight: 1.4 }}>{p.name}</p>
@@ -1201,7 +1202,7 @@ function RankingTab({ myType, ratingOf, favs, toggleFav, onGoDiagnosis }) {
             <div style={{ fontFamily: font.display, fontSize: 20, fontWeight: 700, width: 26, textAlign: "center", color: i < 3 ? "#C9962B" : "#B0A99F" }}>
               {i + 1}
             </div>
-            <ProductVisual product={p} size={54} />
+            <ProductVisual product={p} size={76} />
             <div style={{ flex: 1, minWidth: 0 }}>
               <p style={{ fontSize: 10.5, color: "#9A938A", margin: 0 }}>{p.brand} / {p.cat}</p>
               <p style={{ fontSize: 13.5, fontWeight: 700, margin: "2px 0 4px", lineHeight: 1.4 }}>{p.name}</p>
@@ -1261,7 +1262,7 @@ function MyPageTab({ myType, myDiag, favs, toggleFav, ratingOf, onGoDiagnosis })
       >
         {favs.includes(p.id) ? "♥" : "♡"}
       </button>
-      <ProductVisual product={p} size={46} />
+      <ProductVisual product={p} size={64} />
       <div style={{ flex: 1, minWidth: 0, paddingRight: 20 }}>
         <p style={{ fontSize: 10, color: "#9A938A", margin: 0 }}>{p.brand} / {p.cat}</p>
         <p style={{ fontSize: 12.5, fontWeight: 700, margin: "2px 0 3px", lineHeight: 1.4 }}>{p.name}</p>
