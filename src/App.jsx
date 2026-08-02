@@ -327,7 +327,16 @@ export default function App() {
           )}
         </header>
 
-        {tab === "diagnosis" && <DiagnosisTab myType={myType} onDiagnosed={saveDiagnosis} />}
+        {tab === "diagnosis" && (
+          <DiagnosisTab
+            myType={myType}
+            onDiagnosed={saveDiagnosis}
+            ratingOf={ratingOf}
+            favs={favs}
+            toggleFav={toggleFav}
+            onGoRanking={() => setTab("ranking")}
+          />
+        )}
         {tab === "ranking" && <RankingTab myType={myType} ratingOf={ratingOf} favs={favs} toggleFav={toggleFav} onGoDiagnosis={() => setTab("diagnosis")} />}
         {tab === "reviews" && <ReviewTab reviews={reviews} addReview={addReview} myType={myType} storageReady={storageReady} />}
         {tab === "mypage" && <MyPageTab myType={myType} myDiag={myDiag} favs={favs} toggleFav={toggleFav} ratingOf={ratingOf} onGoDiagnosis={() => setTab("diagnosis")} />}
@@ -434,6 +443,37 @@ const measureSkin = (dataUrl) =>
     img.src = dataUrl;
   });
 
+// 画像から瞳(虹彩)らしいピクセルの平均色を測定する
+const measureEye = (dataUrl) =>
+  new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      const c = document.createElement("canvas");
+      c.width = img.width; c.height = img.height;
+      const ctx = c.getContext("2d");
+      ctx.drawImage(img, 0, 0);
+      const d = ctx.getImageData(0, 0, c.width, c.height).data;
+      const w = c.width, h = c.height;
+      // ガイド通り撮影されていれば瞳は中央付近に写るので、中央60%だけをサンプリングする
+      const x0 = Math.floor(w * 0.2), x1 = Math.ceil(w * 0.8);
+      const y0 = Math.floor(h * 0.2), y1 = Math.ceil(h * 0.8);
+      let r = 0, g = 0, b = 0, n = 0;
+      for (let y = y0; y < y1; y++) {
+        for (let x = x0; x < x1; x++) {
+          const i = (y * w + x) * 4;
+          const R = d[i], G = d[i + 1], B = d[i + 2];
+          const lum = 0.299 * R + 0.587 * G + 0.114 * B;
+          // 白目・反射光(明るすぎ)と瞳孔・まつ毛(暗すぎ)を除いて虹彩らしい中間トーンだけ残す
+          if (lum > 35 && lum < 165) { r += R; g += G; b += B; n++; }
+        }
+      }
+      if (n < 30) { resolve(null); return; }
+      resolve({ r: Math.round(r / n), g: Math.round(g / n), b: Math.round(b / n), count: n });
+    };
+    img.onerror = () => resolve(null);
+    img.src = dataUrl;
+  });
+
 // sRGB -> CIELAB 変換(色の見えに合わせた標準的な色空間)
 const rgbToLab = (r, g, b) => {
   const f = (c) => {
@@ -478,16 +518,24 @@ const analyzeTone = (rgb) => {
   };
 };
 
-// 実測した肌(・手のひら)のトーンから4シーズンを判定する
+// 実測した肌・手のひら・瞳のトーンから4シーズンを判定する
 // 黄み/赤みバランス(warm)と明るさ(brightness)の2軸で、各シーズンの基準点との近さをスコア化する
-const localDiagnose = (skinTone, palmTone) => {
-  const mix = (key, skinWeight = 0.7) =>
-    palmTone && typeof palmTone[key] === "number" && typeof skinTone[key] === "number"
-      ? skinTone[key] * skinWeight + palmTone[key] * (1 - skinWeight)
-      : skinTone[key];
+const localDiagnose = (skinTone, palmTone, eyeTone) => {
+  // 複数部位の測定値を重み付け平均する。欠けている部位は自動で除外し、残りで重みを配分し直す
+  const weightedAvg = (entries) => {
+    const valid = entries.filter(([v]) => typeof v === "number");
+    const total = valid.reduce((s, [, w]) => s + w, 0);
+    return total ? valid.reduce((s, [v, w]) => s + v * w, 0) / total : null;
+  };
 
-  const warm = mix("warm"); // 0(ブルベ寄り)〜100(イエベ寄り)
-  const brightPct = Math.max(0, Math.min(100, ((mix("brightness") - 0.45) / 0.5) * 100)); // 明るさ0〜100
+  // 瞳(虹彩)は肌ほど暖色/寒色の手がかりが強くないため、重みは控えめにする
+  const warm = weightedAvg([
+    [skinTone.warm, 0.55],
+    [palmTone?.warm, 0.25],
+    [eyeTone?.warm, 0.2],
+  ]); // 0(ブルベ寄り)〜100(イエベ寄り)
+  // 明るさは瞳(虹彩)が構造的に暗いため含めず、肌・手のひらのみで判定する
+  const brightPct = Math.max(0, Math.min(100, ((weightedAvg([[skinTone.brightness, 0.7], [palmTone?.brightness, 0.3]]) - 0.45) / 0.5) * 100)); // 明るさ0〜100
 
   const anchors = {
     spring: { x: 82, y: 78 },
@@ -522,7 +570,17 @@ const localDiagnose = (skinTone, palmTone) => {
           season === "summer" ? "ソフトで涼しげな『サマー』" : "コントラストのはっきりした『ウィンター』"
         }寄りと判定しました。`;
 
-  return { season, confidence: seasonScores[season], undertone, warmScore, coolScore, seasonScores };
+  const features = {
+    skin: `測定した肌の色は ${skinTone.hex}。黄み優勢度 ${skinTone.balance} で${skinTone.warm >= 50 ? "イエベ" : "ブルベ"}寄りの傾向です。`,
+  };
+  if (palmTone) {
+    features.palm = `手のひらの色は ${palmTone.hex}。黄み優勢度 ${palmTone.balance} で、肌の判定を${palmTone.warm >= 50 ? "イエベ" : "ブルベ"}側から補強しています。`;
+  }
+  if (eyeTone) {
+    features.eyes = `瞳の色は ${eyeTone.hex} 系。${eyeTone.warm >= 50 ? "ブラウン系の暖かみ" : "ブラック〜グレー系の涼しさ"}があり、判定に反映しています。`;
+  }
+
+  return { season, confidence: seasonScores[season], undertone, warmScore, coolScore, seasonScores, features };
 };
 
 // ---------------- 診断タブ(パーツ別ステップ撮影) ----------------
@@ -534,7 +592,7 @@ const STEPS = [
   { id: "vein", type: "photo", title: "血管の色", guide: "手首の内側を明るい場所で。血管が緑っぽいか、青〜紫っぽいかが見えるように。血管が見えにくい人はスキップしてOK(他の項目から判定します)。", required: false, capture: "environment" },
 ];
 
-function DiagnosisTab({ myType, onDiagnosed }) {
+function DiagnosisTab({ myType, onDiagnosed, ratingOf, favs, toggleFav, onGoRanking }) {
   const [photos, setPhotos] = useState({}); // {skin: {base64, url}, ...}
   const [current, setCurrent] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -646,18 +704,19 @@ function DiagnosisTab({ myType, onDiagnosed }) {
     setError(null);
     setResult(null);
 
-    // 肌と手のひらの色を実測
-    let skinTone = null, palmTone = null;
+    // 肌・手のひら・瞳の色を実測
+    let skinTone = null, palmTone = null, eyeTone = null;
     try {
       skinTone = analyzeTone(await measureSkin(photos.skin.url));
       if (photos.palm) palmTone = analyzeTone(await measureSkin(photos.palm.url));
+      if (photos.eyes) eyeTone = analyzeTone(await measureEye(photos.eyes.url));
     } catch (e) { /* 測定に失敗しても診断は続行する */ }
-    setMeasured({ skin: skinTone, palm: palmTone });
+    setMeasured({ skin: skinTone, palm: palmTone, eyes: eyeTone });
 
     // 画像解析だけで診断する(AI・APIキー不要)
     setTimeout(() => {
       const fallbackTone = skinTone || { warm: 50, brightness: 0.80, hex: "#DCC0A8", yellowness: 15, redness: 9, balance: 5 };
-      const local = localDiagnose(fallbackTone, palmTone);
+      const local = localDiagnose(fallbackTone, palmTone, eyeTone);
       local.lighting = "アプリの画像解析(CIELAB色空間による測定)で診断しました。";
       setResult(local);
       onDiagnosed(local);
@@ -667,6 +726,12 @@ function DiagnosisTab({ myType, onDiagnosed }) {
 
   const season = result ? SEASONS[result.season] : null;
   const FEATURE_LABELS = { skin: "肌の色", eyes: "瞳の色", hair: "髪の色", palm: "手のひら", vein: "血管の色" };
+  const recommendedProducts = result
+    ? PRODUCTS.filter((p) => p.seasons.includes(result.season))
+        .map((p) => ({ ...p, ...ratingOf(p) }))
+        .sort((a, b) => b.avg - a.avg)
+        .slice(0, 6)
+    : [];
 
   return (
     <div className="fade-up">
@@ -875,14 +940,20 @@ function DiagnosisTab({ myType, onDiagnosed }) {
 
             {measured?.skin && (
               <div style={{ marginTop: 14, background: "#FAF8F5", borderRadius: 10, padding: "12px 14px" }}>
-                <p style={{ fontSize: 11.5, color: "#6E675F", margin: "0 0 8px" }}>アプリが測定した肌の色(客観データ)</p>
-                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <p style={{ fontSize: 11.5, color: "#6E675F", margin: "0 0 8px" }}>アプリが測定した色(客観データ)</p>
+                <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
                   <span style={{ width: 30, height: 30, borderRadius: 9, background: measured.skin.hex, border: "1px solid #E0DAD2" }} />
-                  <span style={{ fontSize: 11, color: "#9A938A" }}>{measured.skin.hex}</span>
+                  <span style={{ fontSize: 11, color: "#9A938A" }}>{measured.skin.hex}(肌)</span>
                   {measured.palm && (
                     <>
                       <span style={{ width: 30, height: 30, borderRadius: 9, background: measured.palm.hex, border: "1px solid #E0DAD2" }} />
                       <span style={{ fontSize: 11, color: "#9A938A" }}>{measured.palm.hex}(手のひら)</span>
+                    </>
+                  )}
+                  {measured.eyes && (
+                    <>
+                      <span style={{ width: 30, height: 30, borderRadius: 9, background: measured.eyes.hex, border: "1px solid #E0DAD2" }} />
+                      <span style={{ fontSize: 11, color: "#9A938A" }}>{measured.eyes.hex}(瞳)</span>
                     </>
                   )}
                 </div>
@@ -968,6 +1039,44 @@ function DiagnosisTab({ myType, onDiagnosed }) {
             <p style={{ fontSize: 11, color: "#9A938A", lineHeight: 1.8, marginTop: 16 }}>
               ※ 写真の照明や画質によって結果が変わることがあります。あくまで参考としてお楽しみください。
             </p>
+
+            {recommendedProducts.length > 0 && (
+              <>
+                <h3 style={{ fontFamily: font.display, fontSize: 15, margin: "22px 0 10px" }}>{season.name}に似合うコスメ</h3>
+                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                  {recommendedProducts.map((p) => (
+                    <div
+                      key={p.id}
+                      style={{ background: "#FAF8F5", borderRadius: 14, padding: "12px 14px", display: "flex", gap: 12, alignItems: "center", position: "relative" }}
+                    >
+                      <button
+                        onClick={() => toggleFav(p.id)}
+                        aria-label="お気に入り"
+                        style={{ position: "absolute", top: 6, right: 8, background: "none", border: "none", fontSize: 19, color: favs.includes(p.id) ? "#C4526B" : "#DDD6CC", lineHeight: 1, padding: 4 }}
+                      >
+                        {favs.includes(p.id) ? "♥" : "♡"}
+                      </button>
+                      <ProductVisual product={p} size={44} />
+                      <div style={{ flex: 1, minWidth: 0, paddingRight: 20 }}>
+                        <p style={{ fontSize: 10, color: "#9A938A", margin: 0 }}>{p.brand} / {p.cat}</p>
+                        <p style={{ fontSize: 12.5, fontWeight: 700, margin: "2px 0 3px", lineHeight: 1.4 }}>{p.name}</p>
+                        <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
+                          <Stars value={p.avg} size={11} />
+                          <span style={{ fontSize: 10.5, color: "#6E675F" }}>{p.avg.toFixed(1)}</span>
+                          <span style={{ fontSize: 10.5, color: "#9A938A" }}>¥{p.price.toLocaleString()}</span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <button
+                  onClick={onGoRanking}
+                  style={{ display: "block", margin: "10px auto 0", background: "none", border: "none", color: "#9A938A", fontSize: 12, textDecoration: "underline" }}
+                >
+                  {season.name}に似合うコスメをもっと見る →
+                </button>
+              </>
+            )}
 
             <button
               onClick={() => { setPhotos({}); setHairDyed(null); setMeasured(null); setCurrent(0); setResult(null); }}
