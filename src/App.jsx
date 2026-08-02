@@ -602,7 +602,7 @@ const STEPS = [
   { id: "skin", type: "photo", title: "肌の色(顔全体)", guide: "正面から、すっぴんに近い状態で。自然光の下だと肌の色が正確に写ります。", required: true, capture: "user" },
   { id: "eyes", type: "photo", title: "瞳の色", guide: "片目のアップ。瞳(黒目・虹彩)の色がはっきり写るように。", required: false, capture: "user" },
   { id: "hair", type: "photo", title: "髪の色", guide: "根もと付近など、地毛の色がわかる部分を明るい場所で。染めている場合は下で教えてください。", required: false, capture: "user" },
-  { id: "palm", type: "photo", title: "手のひらの色", guide: "手のひら全体を明るい場所で。黄みがかっているか、赤み・ピンクみがあるかがポイントです。", required: false, capture: "environment" },
+  { id: "palm", type: "photo", title: "手のひらの色", guide: "手の甲ではなく、手のひら側をカメラに向けてください。指先まで入るように、明るい場所で手全体を写します。黄みがかっているか、赤み・ピンクみがあるかがポイントです。", required: false, capture: "environment" },
   { id: "vein", type: "photo", title: "血管の色", guide: "手首の内側を明るい場所で。血管が緑っぽいか、青〜紫っぽいかが見えるように。血管が見えにくい人はスキップしてOK(他の項目から判定します)。", required: false, capture: "environment" },
 ];
 
