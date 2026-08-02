@@ -236,6 +236,47 @@ const ProductVisual = ({ product, size = 60 }) => {
   }
 };
 
+// ---------------- 広告枠 ----------------
+// 広告サービスのタグを入れるときは、下の AD_SLOT_HTML に貼り付けるだけで表示に切り替わります。
+// 空文字のあいだは「広告スペース」のプレースホルダーが出ます(審査中や広告なしでもレイアウトが崩れません)。
+//
+// 例(忍者AdMax など、貼り付け型のタグの場合):
+//   const AD_SLOT_HTML = `<script src="https://adm.shinobi.jp/s/xxxxxxxx"></script>`;
+//
+// Google AdSense を使う場合は、独自ドメインの取得と審査通過が必要です
+// (github.io のような他人のドメインのサブドメインでは審査を通せません)。
+// 通過後は index.html の <head> に AdSense のスクリプトタグを足したうえで、ここに <ins class="adsbygoogle" ...> を貼ります。
+const AD_SLOT_HTML = "";
+
+const AdSlot = ({ label = "広告" }) => {
+  const ref = useRef(null);
+
+  useEffect(() => {
+    if (!AD_SLOT_HTML || !ref.current) return;
+    // innerHTML で挿入した <script> はブラウザが実行しないため、同じ内容のscript要素を作り直して差し込む
+    const holder = ref.current;
+    holder.innerHTML = "";
+    const parsed = document.createRange().createContextualFragment(AD_SLOT_HTML);
+    holder.appendChild(parsed);
+  }, []);
+
+  return (
+    <div
+      style={{
+        marginTop: 14, minHeight: 110, borderRadius: 14, background: "#FAF8F5",
+        border: "1px dashed #E0DAD2", display: "flex", alignItems: "center", justifyContent: "center",
+        overflow: "hidden", padding: 8,
+      }}
+    >
+      {AD_SLOT_HTML ? (
+        <div ref={ref} style={{ width: "100%", textAlign: "center" }} />
+      ) : (
+        <span style={{ fontSize: 11, color: "#C4BDB2", letterSpacing: "0.15em" }}>{label}スペース</span>
+      )}
+    </div>
+  );
+};
+
 const Stars = ({ value, size = 13 }) => (
   <span style={{ color: "#E0A93E", fontSize: size, letterSpacing: 1 }}>
     {"★".repeat(Math.round(value))}
@@ -619,6 +660,7 @@ function DiagnosisTab({ myType, onDiagnosed, ratingOf, favs, toggleFav, onGoRank
   const [camError, setCamError] = useState(false);
   const fileRef = useRef(null);
   const libraryFileRef = useRef(null); // capture属性なし。写真ライブラリから選ぶ用
+  const loadingRef = useRef(null);
   const videoRef = useRef(null);
   const streamRef = useRef(null);
 
@@ -718,6 +760,8 @@ function DiagnosisTab({ myType, onDiagnosed, ratingOf, favs, toggleFav, onGoRank
     setLoading(true);
     setError(null);
     setResult(null);
+    // 待ち時間中の表示はフォームの下端にあり画面外になりやすいので、見える位置までスクロールする
+    setTimeout(() => loadingRef.current?.scrollIntoView({ block: "center" }), 50);
 
     // 肌・手のひら・瞳の色を実測
     let skinTone = null, palmTone = null, eyeTone = null;
@@ -736,7 +780,7 @@ function DiagnosisTab({ myType, onDiagnosed, ratingOf, favs, toggleFav, onGoRank
       setResult(local);
       onDiagnosed(local);
       setLoading(false);
-    }, 600);
+    }, 3000);
   };
 
   const season = result ? SEASONS[result.season] : null;
@@ -871,9 +915,15 @@ function DiagnosisTab({ myType, onDiagnosed, ratingOf, favs, toggleFav, onGoRank
         </button>
 
         {loading && (
-          <p style={{ fontSize: 12.5, color: "#9A938A", marginTop: 12, textAlign: "center", animation: "pulse 1.4s infinite" }}>
-            肌・瞳・髪・手のひら・血管の色を分析しています…
-          </p>
+          <div ref={loadingRef} style={{ scrollMarginTop: 12 }}>
+            <p style={{ fontSize: 12.5, color: "#9A938A", marginTop: 12, textAlign: "center", animation: "pulse 1.4s infinite" }}>
+              肌・瞳・髪・手のひら・血管の色を分析しています…
+            </p>
+            <AdSlot />
+            <p style={{ fontSize: 10.5, color: "#C4BDB2", textAlign: "center", marginTop: 8 }}>
+              まもなく結果が表示されます
+            </p>
+          </div>
         )}
         {error && <p style={{ fontSize: 13, color: "#B3402B", marginTop: 12, lineHeight: 1.8, textAlign: "center" }}>{error}</p>}
       </div>
