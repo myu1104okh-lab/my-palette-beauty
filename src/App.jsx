@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 
 // ブラウザのローカル保存(端末内に保存されます)
 const storage = {
@@ -248,7 +249,7 @@ const ProductVisual = ({ product, size = 60 }) => {
 // 通過後は index.html の <head> に AdSense のスクリプトタグを足したうえで、ここに <ins class="adsbygoogle" ...> を貼ります。
 const AD_SLOT_HTML = "";
 
-const AdSlot = ({ label = "広告" }) => {
+const AdSlot = ({ label = "広告", fill = false }) => {
   const ref = useRef(null);
 
   useEffect(() => {
@@ -262,16 +263,20 @@ const AdSlot = ({ label = "広告" }) => {
 
   return (
     <div
-      style={{
-        marginTop: 14, minHeight: 110, borderRadius: 14, background: "#FAF8F5",
-        border: "1px dashed #E0DAD2", display: "flex", alignItems: "center", justifyContent: "center",
-        overflow: "hidden", padding: 8,
-      }}
+      style={
+        fill
+          ? { flex: 1, width: "100%", display: "flex", alignItems: "center", justifyContent: "center", overflow: "auto" }
+          : {
+              marginTop: 14, minHeight: 110, borderRadius: 14, background: "#FAF8F5",
+              border: "1px dashed #E0DAD2", display: "flex", alignItems: "center", justifyContent: "center",
+              overflow: "hidden", padding: 8,
+            }
+      }
     >
       {AD_SLOT_HTML ? (
         <div ref={ref} style={{ width: "100%", textAlign: "center" }} />
       ) : (
-        <span style={{ fontSize: 11, color: "#C4BDB2", letterSpacing: "0.15em" }}>{label}スペース</span>
+        <span style={{ fontSize: fill ? 13 : 11, color: "#C4BDB2", letterSpacing: "0.15em" }}>{label}スペース</span>
       )}
     </div>
   );
@@ -658,9 +663,9 @@ function DiagnosisTab({ myType, onDiagnosed, ratingOf, favs, toggleFav, onGoRank
   const [cameraOn, setCameraOn] = useState(false);
   const [facing, setFacing] = useState("user");
   const [camError, setCamError] = useState(false);
+  const [adOpen, setAdOpen] = useState(false); // 診断中の全画面広告
   const fileRef = useRef(null);
   const libraryFileRef = useRef(null); // capture属性なし。写真ライブラリから選ぶ用
-  const loadingRef = useRef(null);
   const videoRef = useRef(null);
   const streamRef = useRef(null);
 
@@ -760,8 +765,7 @@ function DiagnosisTab({ myType, onDiagnosed, ratingOf, favs, toggleFav, onGoRank
     setLoading(true);
     setError(null);
     setResult(null);
-    // 待ち時間中の表示はフォームの下端にあり画面外になりやすいので、見える位置までスクロールする
-    setTimeout(() => loadingRef.current?.scrollIntoView({ block: "center" }), 50);
+    setAdOpen(true); // 診断中は全画面広告を出す(結果が出るか、閉じるボタンで閉じる)
 
     // 肌・手のひら・瞳の色を実測
     let skinTone = null, palmTone = null, eyeTone = null;
@@ -780,6 +784,7 @@ function DiagnosisTab({ myType, onDiagnosed, ratingOf, favs, toggleFav, onGoRank
       setResult(local);
       onDiagnosed(local);
       setLoading(false);
+      setAdOpen(false);
     }, 3000);
   };
 
@@ -914,22 +919,46 @@ function DiagnosisTab({ myType, onDiagnosed, ratingOf, favs, toggleFav, onGoRank
           {loading ? "診断中…" : canAnalyze ? `${doneCount}項目で診断する` : "肌(顔全体)の写真を撮ると診断できます"}
         </button>
 
-        {loading && (
-          <div ref={loadingRef} style={{ scrollMarginTop: 12 }}>
-            <p style={{ fontSize: 12.5, color: "#9A938A", marginTop: 12, textAlign: "center", animation: "pulse 1.4s infinite" }}>
-              肌・瞳・髪・手のひら・血管の色を分析しています…
-            </p>
-            <AdSlot />
-            <p style={{ fontSize: 10.5, color: "#C4BDB2", textAlign: "center", marginTop: 8 }}>
-              まもなく結果が表示されます
-            </p>
-          </div>
+        {loading && !adOpen && (
+          <p style={{ fontSize: 12.5, color: "#9A938A", marginTop: 12, textAlign: "center", animation: "pulse 1.4s infinite" }}>
+            肌・瞳・髪・手のひら・血管の色を分析しています…
+          </p>
         )}
         {error && <p style={{ fontSize: 13, color: "#B3402B", marginTop: 12, lineHeight: 1.8, textAlign: "center" }}>{error}</p>}
       </div>
 
-      {/* カメラ画面 */}
-      {cameraOn && (
+      {/* 診断中の全画面広告。結果が出れば自動で閉じ、閉じるボタンでいつでも閉じられる */}
+      {/* body直下に描画する: 親の .fade-up に transform が残ると position:fixed の基準がそこになり全画面にならないため */}
+      {loading && adOpen && createPortal(
+        <div style={{ position: "fixed", inset: 0, background: "#F7F5F2", zIndex: 150, display: "flex", flexDirection: "column", padding: "16px 16px 20px" }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
+            <p style={{ fontSize: 10, letterSpacing: "0.2em", color: "#B0A99F", margin: 0 }}>広告</p>
+            <button
+              onClick={() => setAdOpen(false)}
+              style={{ background: "none", border: "1px solid #D6CFC5", borderRadius: 999, padding: "7px 16px", fontSize: 12.5, color: "#55504A" }}
+            >
+              閉じる ✕
+            </button>
+          </div>
+
+          <AdSlot fill />
+
+          <div style={{ textAlign: "center" }}>
+            <p style={{ fontFamily: font.display, fontSize: 15, margin: "0 0 6px", animation: "pulse 1.4s infinite" }}>
+              診断中…
+            </p>
+            <p style={{ fontSize: 12, color: "#9A938A", margin: 0, lineHeight: 1.8 }}>
+              肌・瞳・髪・手のひら・血管の色を分析しています
+              <br />
+              まもなく結果が表示されます
+            </p>
+          </div>
+        </div>,
+        document.body
+      )}
+
+      {/* カメラ画面。広告と同じ理由で body 直下に描画しないと全画面にならない */}
+      {cameraOn && createPortal(
         <div style={{ position: "fixed", inset: 0, background: "rgba(20,18,16,0.96)", zIndex: 100, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 20 }}>
           <p style={{ color: "#F7F5F2", fontFamily: font.display, fontSize: 15, margin: "0 0 4px" }}>{step.title} を撮影</p>
           <p style={{ color: "#B0A99F", fontSize: 12, margin: "0 0 14px", textAlign: "center", lineHeight: 1.7, maxWidth: 300 }}>{step.guide}</p>
@@ -955,7 +984,8 @@ function DiagnosisTab({ myType, onDiagnosed, ratingOf, favs, toggleFav, onGoRank
               カメラ切替
             </button>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
       {/* 診断結果 */}
