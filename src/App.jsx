@@ -139,13 +139,31 @@ const PRODUCTS = [
   { id: "p23", name: "マーメイドスキンジェルUV 01 クリア", brand: "キャンメイク", cat: "ベースメイク", price: 770, seasons: ["spring", "summer", "autumn", "winter"], cosme: { rating: 5.1, count: 2425, id: "10094530" }, color: "#CFE9E5", img: "https://www.canmake.com/wp-content/uploads/2025/08/A06_67_col01_img_00-2.jpg" },
   { id: "p24", name: "皮脂テカリ防止下地 ピンクベージュ", brand: "セザンヌ", cat: "ベースメイク", price: 660, seasons: ["spring", "summer"], cosme: { rating: 4.7, count: 10546, id: "10091823" }, color: "#F3C9C2", img: "https://www.cezanne.co.jp/uploads/lineup/4939553040057/img1_pk.png" },
   { id: "p25", name: "エッセンス スキングロウ ファンデーション 240 Quartz", brand: "資生堂", cat: "ベースメイク", price: 7590, seasons: ["spring", "summer", "autumn", "winter"], cosme: { rating: 5.4, count: 7341, id: "10240900" }, color: "#D9A98C", img: "https://imagecdn.shiseido.co.jp/c!/a=0,w=1000,f=webp:jpg/resources/sw/products/img/20230622/SHOHIN_PL_C1_G80101.jpg" },
+  // ちふれ
+  { id: "p26", name: "ラスティング リップスティック PK10 ピンク系(グロスタイプ)", brand: "ちふれ", cat: "リップ", price: 880, seasons: ["summer"], cosme: { rating: 4.3, count: 89, id: "10290320" }, color: "#DE9AA9", img: "https://onlineshop.chifure-group.jp/img/goods/L/8072_9f1d3b055f4f44469038fffe09ca9aa7.jpg" },
+  { id: "p27", name: "メーキャップ ベース クリーム UV N 1.ピンク", brand: "ちふれ", cat: "ベースメイク", price: 770, seasons: ["spring", "summer", "autumn", "winter"], cosme: { rating: 4.4, count: 246, id: "10171773" }, color: "#EDC0C3", img: "https://onlineshop.chifure-group.jp/img/goods/L/2752_d7e6da19f934454a8ab5a8922b9bac11.jpg" },
+  // fwee
+  { id: "p28", name: "リップアンドチークグローイジェリーポット JC01 ハニーピーチ", brand: "fwee", cat: "チーク", price: 1870, seasons: ["spring"], cosme: { rating: 5.0, count: 512, id: "10262774" }, color: "#E38389", img: "https://fitter.cosme.net/media/product/10262/skuimg_1001017.jpg?target=1200x1200" },
+  { id: "p29", name: "3Dボリューミンググロス B07 ピーチ 70%", brand: "fwee", cat: "リップ", price: 1760, seasons: ["spring"], cosme: { rating: 5.3, count: 4700, id: "10254107" }, color: "#E9AB9C", img: "https://fitter.cosme.net/media/product/10254/skuimg_1009689.jpg?target=1200x1200" },
+  // rom&nd
+  { id: "p30", name: "ザジューシーラスティングティント 09 モルドピーチ", brand: "rom&nd", cat: "リップ", price: 1320, seasons: ["spring"], cosme: { rating: 4.8, count: 911, id: "10268210" }, color: "#F5878D", img: "https://fitter.cosme.net/media/product/10268/skuimg_1019585.jpg?target=1200x1200" },
+  { id: "p31", name: "ベターザンシェイプ Oat Grain", brand: "rom&nd", cat: "ノーズシャドウ", price: 1499, seasons: ["spring", "autumn"], cosme: { rating: 4.6, count: 174, id: "10196676" }, color: "#B59887", img: "https://fitter.cosme.net/media/product/10196/skuimg_774355.jpg?target=1200x1200" },
+  // CLIO
+  { id: "p32", name: "プロ アイ パレット エアー 02 ROSE CONNECT", brand: "CLIO", cat: "アイシャドウ", price: 3960, seasons: ["spring", "summer"], cosme: { rating: 5.3, count: 816, id: "10245453" }, color: "#E19B9A", img: "https://cdn-2828.cafe24img.com/doowonjp/web/product/extra/big/202309/20ce733dd5cebcae90287454aeaabb01.jpg" },
+  { id: "p33", name: "シャープ ソ シンプル ウォータープルーフ ペンシル ライナー 01 BLACK", brand: "CLIO", cat: "アイライナー", price: 1430, seasons: ["spring", "summer", "autumn", "winter"], cosme: { rating: 4.8, count: 26, id: "10175715" }, color: "#201616", img: "https://cdn-2828.cafe24img.com/doowonjp/web/product/big/202410/8d0bd7dd0dac3c0841ef002a8126c9ac.jpg" },
+  // &be
+  { id: "p34", name: "テンシーラーUVプラス ベージュ&オレンジ", brand: "&be", cat: "ベースメイク", price: 3850, seasons: ["spring", "summer", "autumn", "winter"], cosme: { rating: 4.9, count: 126, id: "10282494" }, color: "#C69D7D", img: "https://fitter.cosme.net/media/product/10282/skuimg_1069947.jpg?target=1200x1200" },
+  { id: "p35", name: "マスカラ ブラック", brand: "&be", cat: "マスカラ", price: 1650, seasons: ["spring", "summer", "autumn", "winter"], cosme: { rating: 4.8, count: 60, id: "10251438" }, color: "#242323", img: "https://fitter.cosme.net/media/product/10251/skuimg_959132.jpg?target=1200x1200" },
+  // ヴィセ
+  { id: "p36", name: "レイヤード フルリ チーク PK-1 ピオニーピンク", brand: "ヴィセ", cat: "チーク", price: 1760, seasons: ["spring", "summer"], cosme: { rating: 5.2, count: 507, id: "10282797" }, color: "#E0ADBB", img: "https://www.kose.co.jp/visee/resources/images/vsr/cheek/layered_fleuri_cheek/item_pk1.jpg" },
+  { id: "p37", name: "ニュアンス デューイ クリエイター BE-2 グレイスベージュ", brand: "ヴィセ", cat: "アイシャドウ", price: 1320, seasons: ["summer"], cosme: { rating: 5.0, count: 474, id: "10248166" }, color: "#D7B5AC", img: "https://www.kose.co.jp/visee/resources/images/vsr/eye_color/nuance_dewy_creator/item_be2.jpg" },
 ];
 
 // 商品名+ブランドで楽天市場を検索するURL(特定の商品ページを推測せず、常に有効な検索結果URLを組み立てる)
 const shoppingSearchUrl = (p) => `https://search.rakuten.co.jp/search/mall/${encodeURIComponent(`${p.brand} ${p.name}`)}/`;
 
 const CATS = ["すべて", "リップ", "チーク", "アイシャドウ", "ノーズシャドウ", "アイライナー", "マスカラ", "ベースメイク"];
-const BRANDS = ["すべて", "キャンメイク", "セザンヌ", "資生堂", "KATE", "エクセル", "オペラ"];
+const BRANDS = ["すべて", "キャンメイク", "セザンヌ", "資生堂", "KATE", "エクセル", "オペラ", "ちふれ", "ヴィセ", "&be", "fwee", "rom&nd", "CLIO"];
 const font = {
   display: "'Shippori Mincho', 'Hiragino Mincho ProN', serif",
   body: "'Zen Kaku Gothic New', 'Hiragino Kaku Gothic ProN', sans-serif",
