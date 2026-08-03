@@ -1203,11 +1203,19 @@ function RankingTab({ myType, ratingOf, favs, toggleFav, onGoDiagnosis }) {
   const [brand, setBrand] = useState("すべて");
   const [onlyMine, setOnlyMine] = useState(false);
 
+  const TOP_N = 5; // 種類ごとに上位5位まで表示する
+
   let list = PRODUCTS.filter((p) => (cat === "すべて" || p.cat === cat) && (brand === "すべて" || p.brand === brand));
   if (onlyMine && myType) list = list.filter((p) => p.seasons.includes(myType));
-  list = list
-    .map((p) => ({ ...p, ...ratingOf(p) }))
-    .sort((a, b) => b.avg - a.avg);
+  list = list.map((p) => ({ ...p, ...ratingOf(p) }));
+
+  // 全カテゴリを混ぜて並べると種類がバラバラになるので、種類ごとに区切って各5位までにする
+  const groups = CATS.filter((c) => c !== "すべて")
+    .map((c) => ({
+      cat: c,
+      items: list.filter((p) => p.cat === c).sort((a, b) => b.avg - a.avg).slice(0, TOP_N),
+    }))
+    .filter((g) => g.items.length > 0);
 
   return (
     <div className="fade-up">
@@ -1268,46 +1276,54 @@ function RankingTab({ myType, ratingOf, favs, toggleFav, onGoDiagnosis }) {
         )}
       </div>
 
-      {/* ランキングリスト */}
-      <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-        {list.map((p, i) => (
-          <div key={p.id} style={{ background: "#FFF", borderRadius: 16, padding: "14px 16px", display: "flex", gap: 12, alignItems: "center", boxShadow: "0 1px 8px rgba(0,0,0,0.04)", position: "relative" }}>
-            <button
-              onClick={() => toggleFav(p.id)}
-              aria-label="お気に入り"
-              style={{ position: "absolute", top: 8, right: 10, background: "none", border: "none", fontSize: 20, color: favs.includes(p.id) ? "#C4526B" : "#DDD6CC", lineHeight: 1, padding: 4 }}
-            >
-              {favs.includes(p.id) ? "♥" : "♡"}
-            </button>
-            <div style={{ fontFamily: font.display, fontSize: 20, fontWeight: 700, width: 26, textAlign: "center", color: i < 3 ? "#C9962B" : "#B0A99F" }}>
-              {i + 1}
-            </div>
-            <ProductVisual product={p} size={76} />
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <p style={{ fontSize: 10.5, color: "#9A938A", margin: 0 }}>{p.brand} / {p.cat}</p>
-              <p style={{ fontSize: 13.5, fontWeight: 700, margin: "2px 0 4px", lineHeight: 1.4 }}>{p.name}</p>
-              <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-                <Stars value={p.avg} />
-                <span style={{ fontSize: 11.5, color: "#6E675F" }}>{p.avg.toFixed(1)}({p.count}件)</span>
-                <span style={{ fontSize: 11.5, color: "#9A938A" }}>¥{p.price.toLocaleString()}</span>
-                <a href={shoppingSearchUrl(p)} target="_blank" rel="noopener noreferrer" style={{ fontSize: 11.5, color: "#B3612F", textDecoration: "underline" }}>
-                  楽天市場で探す
-                </a>
-              </div>
-              <div style={{ display: "flex", gap: 4, marginTop: 5 }}>
-                {p.seasons.map((s) => (
-                  <span key={s} style={{ fontSize: 9.5, background: SEASONS[s].soft, color: SEASONS[s].accent, borderRadius: 999, padding: "2px 8px", fontWeight: 700 }}>
-                    {SEASONS[s].name}
-                  </span>
-                ))}
-              </div>
-            </div>
+      {/* 種類ごとのランキング(各5位まで) */}
+      {groups.map((g) => (
+        <div key={g.cat} style={{ marginBottom: 22 }}>
+          <div style={{ display: "flex", alignItems: "baseline", gap: 8, margin: "0 0 8px" }}>
+            <h3 style={{ fontFamily: font.display, fontSize: 16, margin: 0 }}>{g.cat}</h3>
+            <span style={{ fontSize: 10.5, color: "#B0A99F" }}>評価の高い順 TOP{g.items.length}</span>
           </div>
-        ))}
-        {list.length === 0 && (
-          <p style={{ textAlign: "center", fontSize: 13, color: "#9A938A", padding: "30px 0" }}>該当するコスメがありませんでした。</p>
-        )}
-      </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            {g.items.map((p, i) => (
+              <div key={p.id} style={{ background: "#FFF", borderRadius: 16, padding: "14px 16px", display: "flex", gap: 12, alignItems: "center", boxShadow: "0 1px 8px rgba(0,0,0,0.04)", position: "relative" }}>
+                <button
+                  onClick={() => toggleFav(p.id)}
+                  aria-label="お気に入り"
+                  style={{ position: "absolute", top: 8, right: 10, background: "none", border: "none", fontSize: 20, color: favs.includes(p.id) ? "#C4526B" : "#DDD6CC", lineHeight: 1, padding: 4 }}
+                >
+                  {favs.includes(p.id) ? "♥" : "♡"}
+                </button>
+                <div style={{ fontFamily: font.display, fontSize: 20, fontWeight: 700, width: 26, textAlign: "center", color: i < 3 ? "#C9962B" : "#B0A99F" }}>
+                  {i + 1}
+                </div>
+                <ProductVisual product={p} size={76} />
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <p style={{ fontSize: 10.5, color: "#9A938A", margin: 0 }}>{p.brand}</p>
+                  <p style={{ fontSize: 13.5, fontWeight: 700, margin: "2px 0 4px", lineHeight: 1.4 }}>{p.name}</p>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+                    <Stars value={p.avg} />
+                    <span style={{ fontSize: 11.5, color: "#6E675F" }}>{p.avg.toFixed(1)}({p.count}件)</span>
+                    <span style={{ fontSize: 11.5, color: "#9A938A" }}>¥{p.price.toLocaleString()}</span>
+                    <a href={shoppingSearchUrl(p)} target="_blank" rel="noopener noreferrer" style={{ fontSize: 11.5, color: "#B3612F", textDecoration: "underline" }}>
+                      楽天市場で探す
+                    </a>
+                  </div>
+                  <div style={{ display: "flex", gap: 4, marginTop: 5 }}>
+                    {p.seasons.map((s) => (
+                      <span key={s} style={{ fontSize: 9.5, background: SEASONS[s].soft, color: SEASONS[s].accent, borderRadius: 999, padding: "2px 8px", fontWeight: 700 }}>
+                        {SEASONS[s].name}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+      {groups.length === 0 && (
+        <p style={{ textAlign: "center", fontSize: 13, color: "#9A938A", padding: "30px 0" }}>該当するコスメがありませんでした。</p>
+      )}
       <p style={{ fontSize: 11, color: "#B0A99F", textAlign: "center", marginTop: 16, lineHeight: 1.8 }}>
         ※ 商品は実在のものですが、評価・口コミはこのアプリ内の初期値とユーザー投稿です。価格は変動する場合があるため、購入前に販売ページでご確認ください。
       </p>
