@@ -99,40 +99,46 @@ const SEASONS = {
 };
 
 // 実在商品データ(商品名・価格はブランド公式サイト等で確認した実勢価格。写真も公式サイトの商品画像)
-// 評価(base/baseCount)はこのアプリ内の口コミ機能の初期値で、実際のレビュー件数ではありません
+//
+// cosme: @cosme に掲載されている実際の評価。rating は @cosme 本来の7点満点、count はクチコミ件数、
+// id は https://www.cosme.net/products/<id>/ の商品ID。いずれもシリーズ(商品ライン)単位の値で、
+// @cosme のカラー別ページも同じシリーズ値を返すため、色ごとの評価は存在しない。
+// 取得日: 2026-08-03。件数は日々増えるため、表示にも取得日を明記している。
+// この値は編集しないこと(アプリ内の口コミは別集計で、混ぜると実際の評価が歪む)。
+const COSME_FETCHED_AT = "2026年8月3日時点";
 const PRODUCTS = [
   // リップ
-  { id: "p01", name: "ステイオンバームルージュ 09 マスカレードバッド", brand: "キャンメイク", cat: "リップ", price: 638, seasons: ["autumn", "winter"], base: 4.5, baseCount: 320, color: "#A13B4C", img: "https://www.canmake.com/wp-content/uploads/2025/08/D02_03_col09_img_00.jpg" },
-  { id: "p02", name: "ラスティングステイリップカラー 01 ローズレッド", brand: "セザンヌ", cat: "リップ", price: 715, seasons: ["summer", "winter"], base: 4.3, baseCount: 280, color: "#C33C4E", img: "https://www.cezanne.co.jp/uploads/lineup/4939553530350/img1_01.png" },
-  { id: "p03", name: "テクノサテン ジェル リップスティック 403 Augmented Nude", brand: "資生堂", cat: "リップ", price: 4400, seasons: ["spring", "autumn"], base: 4.4, baseCount: 152, color: "#C48374", img: "https://imagecdn.shiseido.co.jp/c!/a=0,w=1000,f=webp:jpg/resources/sw/products/img/20230221/SHOHIN_PL_C1_G68601.jpg" },
-  { id: "p04", name: "リップモンスター 03 陽炎", brand: "KATE", cat: "リップ", price: 1540, seasons: ["autumn", "spring"], base: 4.6, baseCount: 431, color: "#C1543A", img: "https://kao-h.assetsadobe3.com/is/image/content/dam/sites/kao/www-kao-kirei-com/jp/ja/item/kbb/kate/25991344/GG01.jpg?wid=1000" },
-  { id: "p05", name: "リップティント N 06 ピンクレッド", brand: "オペラ", cat: "リップ", price: 1760, seasons: ["summer", "winter"], base: 4.5, baseCount: 389, color: "#E0526B", img: "https://www.opera-net.jp/_wpcms/wp-content/themes/opera/asset/img/item/liptint@2x.png" },
+  { id: "p01", name: "ステイオンバームルージュ 09 マスカレードバッド", brand: "キャンメイク", cat: "リップ", price: 638, seasons: ["autumn", "winter"], cosme: { rating: 4.4, count: 8176, id: "10055980" }, color: "#A13B4C", img: "https://www.canmake.com/wp-content/uploads/2025/08/D02_03_col09_img_00.jpg" },
+  { id: "p02", name: "ラスティングステイリップカラー 01 ローズレッド", brand: "セザンヌ", cat: "リップ", price: 715, seasons: ["summer", "winter"], cosme: { rating: 4.5, count: 142, id: "10275644" }, color: "#C33C4E", img: "https://www.cezanne.co.jp/uploads/lineup/4939553530350/img1_01.png" },
+  { id: "p03", name: "テクノサテン ジェル リップスティック 403 Augmented Nude", brand: "資生堂", cat: "リップ", price: 4400, seasons: ["spring", "autumn"], cosme: { rating: 5.3, count: 1090, id: "10235532" }, color: "#C48374", img: "https://imagecdn.shiseido.co.jp/c!/a=0,w=1000,f=webp:jpg/resources/sw/products/img/20230221/SHOHIN_PL_C1_G68601.jpg" },
+  { id: "p04", name: "リップモンスター 03 陽炎", brand: "KATE", cat: "リップ", price: 1540, seasons: ["autumn", "spring"], cosme: { rating: 5.4, count: 29066, id: "10206485" }, color: "#C1543A", img: "https://kao-h.assetsadobe3.com/is/image/content/dam/sites/kao/www-kao-kirei-com/jp/ja/item/kbb/kate/25991344/GG01.jpg?wid=1000" },
+  { id: "p05", name: "リップティント N 06 ピンクレッド", brand: "オペラ", cat: "リップ", price: 1760, seasons: ["summer", "winter"], cosme: { rating: 5.1, count: 20642, id: "10119418" }, color: "#E0526B", img: "https://www.opera-net.jp/_wpcms/wp-content/themes/opera/asset/img/item/liptint@2x.png" },
   // チーク
-  { id: "p06", name: "グロウフルールチークス 01 ピーチフルール", brand: "キャンメイク", cat: "チーク", price: 880, seasons: ["spring", "summer"], base: 4.2, baseCount: 410, color: "#FFA98C", img: "https://www.canmake.com/wp-content/uploads/2025/08/B00_72_col01_img_01.jpg" },
-  { id: "p07", name: "ナチュラル チークN 01 ピーチピンク", brand: "セザンヌ", cat: "チーク", price: 396, seasons: ["spring"], base: 4.1, baseCount: 274, color: "#FFB6A3", img: "https://www.cezanne.co.jp/uploads/lineup/4939553002918/img1_01.png" },
-  { id: "p08", name: "スキニーマッチ チーク", brand: "エクセル", cat: "チーク", price: 1650, seasons: ["spring", "summer"], base: 4.5, baseCount: 155, color: "#E8879A", img: "https://noevirgroup.jp/excel/img/goods/L/48815.jpg" },
-  { id: "p09", name: "インナーグロウ チークパウダー 03 Floating Rose", brand: "資生堂", cat: "チーク", price: 4400, seasons: ["summer"], base: 4.0, baseCount: 96, color: "#E893A8", img: "https://image.rakuten.co.jp/brandshiseido/cabinet/prd/smu0015/smu0015_nl2601.jpg" },
+  { id: "p06", name: "グロウフルールチークス 01 ピーチフルール", brand: "キャンメイク", cat: "チーク", price: 880, seasons: ["spring", "summer"], cosme: { rating: 4.8, count: 5169, id: "10066851" }, color: "#FFA98C", img: "https://www.canmake.com/wp-content/uploads/2025/08/B00_72_col01_img_01.jpg" },
+  { id: "p07", name: "ナチュラル チークN 01 ピーチピンク", brand: "セザンヌ", cat: "チーク", price: 396, seasons: ["spring"], cosme: { rating: 4.8, count: 13801, id: "274415" }, color: "#FFB6A3", img: "https://www.cezanne.co.jp/uploads/lineup/4939553002918/img1_01.png" },
+  { id: "p08", name: "スキニーリッチチーク RC01 ピンクネクター", brand: "エクセル", cat: "チーク", price: 1650, seasons: ["spring", "summer"], cosme: { rating: 5.0, count: 509, id: "10108705" }, color: "#E8879A", img: "https://noevirgroup.jp/excel/img/goods/L/48815.jpg" },
+  { id: "p09", name: "インナーグロウ チークパウダー 03 Floating Rose", brand: "資生堂", cat: "チーク", price: 4400, seasons: ["summer"], cosme: { rating: 5.6, count: 1240, id: "10157299" }, color: "#E893A8", img: "https://image.rakuten.co.jp/brandshiseido/cabinet/prd/smu0015/smu0015_nl2601.jpg" },
   // アイシャドウ
-  { id: "p10", name: "パーフェクトマルチアイズ 03 アンティークテラコッタ", brand: "キャンメイク", cat: "アイシャドウ", price: 858, seasons: ["autumn"], base: 4.7, baseCount: 502, color: "#B06A4E", img: "https://www.canmake.com/wp-content/uploads/2025/08/C01_20_col03_img_00-1.jpg" },
-  { id: "p11", name: "トーンアップアイシャドウ 01 ナチュラルブラウン", brand: "セザンヌ", cat: "アイシャドウ", price: 638, seasons: ["autumn", "spring"], base: 4.4, baseCount: 318, color: "#A67C58", img: "https://www.cezanne.co.jp/uploads/lineup/4939553040149/img1_01.png" },
-  { id: "p12", name: "スキニーリッチシャドウ N", brand: "エクセル", cat: "アイシャドウ", price: 1650, seasons: ["autumn", "spring"], base: 4.6, baseCount: 446, color: "#C9A063", img: "https://noevirgroup.jp/excel/img/goods/L/78303.jpg" },
-  { id: "p13", name: "メロウブラウンアイズ BR-1 ソフトブラウン", brand: "KATE", cat: "アイシャドウ", price: 1320, seasons: ["autumn", "spring"], base: 4.3, baseCount: 217, color: "#9C7259", img: "https://kao-h.assetsadobe3.com/is/image/content/dam/sites/kao/www-kao-kirei-com/jp/ja/item/kbb/kate/25322618/GG01.jpg?wid=1000" },
+  { id: "p10", name: "パーフェクトマルチアイズ 03 アンティークテラコッタ", brand: "キャンメイク", cat: "アイシャドウ", price: 858, seasons: ["autumn"], cosme: { rating: 4.9, count: 851, id: "10222239" }, color: "#B06A4E", img: "https://www.canmake.com/wp-content/uploads/2025/08/C01_20_col03_img_00-1.jpg" },
+  { id: "p11", name: "トーンアップアイシャドウ 01 ナチュラルブラウン", brand: "セザンヌ", cat: "アイシャドウ", price: 638, seasons: ["autumn", "spring"], cosme: { rating: 4.5, count: 4855, id: "10099441" }, color: "#A67C58", img: "https://www.cezanne.co.jp/uploads/lineup/4939553040149/img1_01.png" },
+  { id: "p12", name: "スキニーリッチシャドウ N", brand: "エクセル", cat: "アイシャドウ", price: 1650, seasons: ["autumn", "spring"], cosme: { rating: 5.4, count: 1156, id: "10288017" }, color: "#C9A063", img: "https://noevirgroup.jp/excel/img/goods/L/78303.jpg" },
+  { id: "p13", name: "メロウブラウンアイズ BR-1 ソフトブラウン", brand: "KATE", cat: "アイシャドウ", price: 1320, seasons: ["autumn", "spring"], cosme: { rating: 5.0, count: 1074, id: "10264792" }, color: "#9C7259", img: "https://kao-h.assetsadobe3.com/is/image/content/dam/sites/kao/www-kao-kirei-com/jp/ja/item/kbb/kate/25322618/GG01.jpg?wid=1000" },
   // ノーズシャドウ
-  { id: "p14", name: "フィットスタイラーアイブロウ 01 ナチュラルブラウン", brand: "キャンメイク", cat: "ノーズシャドウ", price: 880, seasons: ["spring", "autumn"], base: 4.3, baseCount: 265, color: "#C9A98A", img: "https://www.canmake.com/wp-content/uploads/2025/08/C04_199_col01_img_01.jpg" },
-  { id: "p15", name: "アイブロウ&シェードパウダー 01 キャメルブラウン", brand: "セザンヌ", cat: "ノーズシャドウ", price: 693, seasons: ["autumn"], base: 4.5, baseCount: 388, color: "#B98860", img: "https://www.cezanne.co.jp/uploads/lineup/4939553530534/img1_01.png" },
-  { id: "p16", name: "デザイニングアイブロウ3D(デュアルコントゥアカラー) EX-5", brand: "KATE", cat: "ノーズシャドウ", price: 1430, seasons: ["summer", "winter"], base: 4.2, baseCount: 174, color: "#8A6A5C", img: "https://kao-h.assetsadobe3.com/is/image/content/dam/sites/kao/www-kao-kirei-com/jp/ja/item/kbb/kate/25504136/GG01.jpg?wid=1000" },
+  { id: "p14", name: "フィットスタイラーアイブロウ 01 ナチュラルブラウン", brand: "キャンメイク", cat: "ノーズシャドウ", price: 880, seasons: ["spring", "autumn"], cosme: { rating: 4.8, count: 158, id: "10272394" }, color: "#C9A98A", img: "https://www.canmake.com/wp-content/uploads/2025/08/C04_199_col01_img_01.jpg" },
+  { id: "p15", name: "アイブロウ&シェードパウダー 01 キャメルブラウン", brand: "セザンヌ", cat: "ノーズシャドウ", price: 693, seasons: ["autumn"], cosme: { rating: 5.1, count: 422, id: "10285570" }, color: "#B98860", img: "https://www.cezanne.co.jp/uploads/lineup/4939553530534/img1_01.png" },
+  { id: "p16", name: "デザイニングアイブロウ3D(デュアルコントゥアカラー) EX-5", brand: "KATE", cat: "ノーズシャドウ", price: 1430, seasons: ["summer", "winter"], cosme: { rating: 4.8, count: 380, id: "10236785" }, color: "#8A6A5C", img: "https://kao-h.assetsadobe3.com/is/image/content/dam/sites/kao/www-kao-kirei-com/jp/ja/item/kbb/kate/25504136/GG01.jpg?wid=1000" },
   // アイライナー
-  { id: "p17", name: "クリーミータッチライナー ディープブラック", brand: "キャンメイク", cat: "アイライナー", price: 715, seasons: ["spring", "summer", "autumn", "winter"], base: 4.6, baseCount: 521, color: "#1A1A1A", img: "https://www.canmake.com/wp-content/uploads/2025/08/C05_36_col01_img_00.jpg" },
-  { id: "p18", name: "ジェルアイライナー 10 ブラック", brand: "セザンヌ", cat: "アイライナー", price: 550, seasons: ["spring", "summer", "autumn", "winter"], base: 4.3, baseCount: 296, color: "#1C1C1C", img: "https://www.cezanne.co.jp/uploads/lineup/4939553040453/img1_10.png" },
-  { id: "p19", name: "スーパーシャープライナー EX4.0 BK-1 漆黒ブラック", brand: "KATE", cat: "アイライナー", price: 1430, seasons: ["spring", "summer", "autumn", "winter"], base: 4.4, baseCount: 233, color: "#0D0D0D", img: "https://kao-h.assetsadobe3.com/is/image/content/dam/sites/kanebo/www-nomorerules-net/pickup/super_sharp_liner_ex4/super_sharp_liner_ex4-super_sharp_liner_ex4-thumb-m.png?wid=1000" },
-  { id: "p20", name: "スキニーリッチライナー RL04 テラコッタ", brand: "エクセル", cat: "アイライナー", price: 1430, seasons: ["autumn", "spring"], base: 4.5, baseCount: 189, color: "#B5613C", img: "https://noevirgroup.jp/excel/img/goods/L/48849.jpg" },
+  { id: "p17", name: "クリーミータッチライナー ディープブラック", brand: "キャンメイク", cat: "アイライナー", price: 715, seasons: ["spring", "summer", "autumn", "winter"], cosme: { rating: 5.5, count: 27521, id: "10147158" }, color: "#1A1A1A", img: "https://www.canmake.com/wp-content/uploads/2025/08/C05_36_col01_img_00.jpg" },
+  { id: "p18", name: "ジェルアイライナー 10 ブラック", brand: "セザンヌ", cat: "アイライナー", price: 550, seasons: ["spring", "summer", "autumn", "winter"], cosme: { rating: 4.7, count: 3497, id: "10116834" }, color: "#1C1C1C", img: "https://www.cezanne.co.jp/uploads/lineup/4939553040453/img1_10.png" },
+  { id: "p19", name: "スーパーシャープライナー EX4.0 BK-1 漆黒ブラック", brand: "KATE", cat: "アイライナー", price: 1430, seasons: ["spring", "summer", "autumn", "winter"], cosme: { rating: 5.4, count: 1568, id: "10252446" }, color: "#0D0D0D", img: "https://kao-h.assetsadobe3.com/is/image/content/dam/sites/kanebo/www-nomorerules-net/pickup/super_sharp_liner_ex4/super_sharp_liner_ex4-super_sharp_liner_ex4-thumb-m.png?wid=1000" },
+  { id: "p20", name: "スキニーリッチライナー RL04 テラコッタ", brand: "エクセル", cat: "アイライナー", price: 1430, seasons: ["autumn", "spring"], cosme: { rating: 5.4, count: 505, id: "10152763" }, color: "#B5613C", img: "https://noevirgroup.jp/excel/img/goods/L/48849.jpg" },
   // マスカラ
-  { id: "p21", name: "クイックラッシュカーラー BK ブラック", brand: "キャンメイク", cat: "マスカラ", price: 748, seasons: ["spring", "summer", "autumn", "winter"], base: 4.4, baseCount: 465, color: "#1A1A1A", img: "https://www.canmake.com/wp-content/uploads/2025/08/C02_40_col00_img_00.jpg" },
-  { id: "p22", name: "ラッシュバースト BK-1 ブラック", brand: "KATE", cat: "マスカラ", price: 1540, seasons: ["spring", "summer", "autumn", "winter"], base: 4.2, baseCount: 201, color: "#151515", img: "https://kao-h.assetsadobe3.com/is/image/content/dam/sites/kao/www-kao-kirei-com/jp/ja/item/kbb/kate/25321871/GG01.jpg?wid=1000" },
+  { id: "p21", name: "クイックラッシュカーラー BK ブラック", brand: "キャンメイク", cat: "マスカラ", price: 748, seasons: ["spring", "summer", "autumn", "winter"], cosme: { rating: 5.3, count: 21110, id: "2895399" }, color: "#1A1A1A", img: "https://www.canmake.com/wp-content/uploads/2025/08/C02_40_col00_img_00.jpg" },
+  { id: "p22", name: "ラッシュバースト BK-1 ブラック", brand: "KATE", cat: "マスカラ", price: 1540, seasons: ["spring", "summer", "autumn", "winter"], cosme: { rating: 4.3, count: 150, id: "10259811" }, color: "#151515", img: "https://kao-h.assetsadobe3.com/is/image/content/dam/sites/kao/www-kao-kirei-com/jp/ja/item/kbb/kate/25321871/GG01.jpg?wid=1000" },
   // ベースメイク
-  { id: "p23", name: "マーメイドスキンジェルUV 01 クリア", brand: "キャンメイク", cat: "ベースメイク", price: 770, seasons: ["spring", "summer", "autumn", "winter"], base: 4.5, baseCount: 587, color: "#CFE9E5", img: "https://www.canmake.com/wp-content/uploads/2025/08/A06_67_col01_img_00-2.jpg" },
-  { id: "p24", name: "皮脂テカリ防止下地 ピンクベージュ", brand: "セザンヌ", cat: "ベースメイク", price: 660, seasons: ["spring", "summer"], base: 4.4, baseCount: 634, color: "#F3C9C2", img: "https://www.cezanne.co.jp/uploads/lineup/4939553040057/img1_pk.png" },
-  { id: "p25", name: "エッセンス スキングロウ ファンデーション 240 Quartz", brand: "資生堂", cat: "ベースメイク", price: 7590, seasons: ["spring", "summer", "autumn", "winter"], base: 4.6, baseCount: 312, color: "#D9A98C", img: "https://imagecdn.shiseido.co.jp/c!/a=0,w=1000,f=webp:jpg/resources/sw/products/img/20230622/SHOHIN_PL_C1_G80101.jpg" },
+  { id: "p23", name: "マーメイドスキンジェルUV 01 クリア", brand: "キャンメイク", cat: "ベースメイク", price: 770, seasons: ["spring", "summer", "autumn", "winter"], cosme: { rating: 5.1, count: 2425, id: "10094530" }, color: "#CFE9E5", img: "https://www.canmake.com/wp-content/uploads/2025/08/A06_67_col01_img_00-2.jpg" },
+  { id: "p24", name: "皮脂テカリ防止下地 ピンクベージュ", brand: "セザンヌ", cat: "ベースメイク", price: 660, seasons: ["spring", "summer"], cosme: { rating: 4.7, count: 10546, id: "10091823" }, color: "#F3C9C2", img: "https://www.cezanne.co.jp/uploads/lineup/4939553040057/img1_pk.png" },
+  { id: "p25", name: "エッセンス スキングロウ ファンデーション 240 Quartz", brand: "資生堂", cat: "ベースメイク", price: 7590, seasons: ["spring", "summer", "autumn", "winter"], cosme: { rating: 5.4, count: 7341, id: "10240900" }, color: "#D9A98C", img: "https://imagecdn.shiseido.co.jp/c!/a=0,w=1000,f=webp:jpg/resources/sw/products/img/20230622/SHOHIN_PL_C1_G80101.jpg" },
 ];
 
 // 商品名+ブランドで楽天市場を検索するURL(特定の商品ページを推測せず、常に有効な検索結果URLを組み立てる)
@@ -289,6 +295,27 @@ const Stars = ({ value, size = 13 }) => (
   </span>
 );
 
+// @cosme の実評価。7点満点なので5つ星では描かず、数値と満点を出典付きで示す
+const CosmeRating = ({ cosme, size = 11.5 }) => {
+  if (!cosme) {
+    return <span style={{ fontSize: size, color: "#B0A99F" }}>評価データなし</span>;
+  }
+  return (
+    <a
+      href={`https://www.cosme.net/products/${cosme.id}/`}
+      target="_blank"
+      rel="noopener noreferrer"
+      style={{ fontSize: size, color: "#6E675F", textDecoration: "none", display: "inline-flex", alignItems: "baseline", gap: 4 }}
+    >
+      <span style={{ color: "#E0A93E" }}>★</span>
+      <strong style={{ fontWeight: 700 }}>{cosme.rating.toFixed(1)}</strong>
+      <span style={{ color: "#9A938A" }}>/ 7</span>
+      <span style={{ color: "#9A938A" }}>({cosme.count.toLocaleString()}件)</span>
+      <span style={{ color: "#B0A99F", textDecoration: "underline" }}>@cosme</span>
+    </a>
+  );
+};
+
 // ---------------- メイン ----------------
 export default function App() {
   const [tab, setTab] = useState("diagnosis");
@@ -346,12 +373,16 @@ export default function App() {
     try { await storage.set("beauty-reviews", JSON.stringify(next)); } catch (e) {}
   };
 
-  // レビュー込みの平均を計算
+  // @cosme の実評価(7点満点)と、このアプリ内の口コミ(5点満点)は別物なので混ぜずに返す。
+  // 平均してしまうと、数件のアプリ内投稿で数万件規模の実評価が動いてしまい実態と食い違う。
   const ratingOf = (p) => {
     const rs = reviews.filter((r) => r.productId === p.id);
-    const sum = p.base * p.baseCount + rs.reduce((a, r) => a + r.rating, 0);
-    const count = p.baseCount + rs.length;
-    return { avg: sum / count, count, userCount: rs.length };
+    const userAvg = rs.length ? rs.reduce((a, r) => a + r.rating, 0) / rs.length : null;
+    return {
+      cosme: p.cosme || null,          // { rating(7点満点), count, id } または null
+      userAvg,                          // アプリ内口コミの平均(5点満点)。投稿がなければ null
+      userCount: rs.length,
+    };
   };
 
   return (
@@ -793,7 +824,7 @@ function DiagnosisTab({ myType, onDiagnosed, ratingOf, favs, toggleFav, onGoRank
   const recommendedProducts = result
     ? PRODUCTS.filter((p) => p.seasons.includes(result.season))
         .map((p) => ({ ...p, ...ratingOf(p) }))
-        .sort((a, b) => b.avg - a.avg)
+        .sort((a, b) => (b.cosme?.rating ?? -1) - (a.cosme?.rating ?? -1))
         .slice(0, 6)
     : [];
 
@@ -1158,8 +1189,7 @@ function DiagnosisTab({ myType, onDiagnosed, ratingOf, favs, toggleFav, onGoRank
                         <p style={{ fontSize: 10, color: "#9A938A", margin: 0 }}>{p.brand} / {p.cat}</p>
                         <p style={{ fontSize: 12.5, fontWeight: 700, margin: "2px 0 3px", lineHeight: 1.4 }}>{p.name}</p>
                         <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
-                          <Stars value={p.avg} size={11} />
-                          <span style={{ fontSize: 10.5, color: "#6E675F" }}>{p.avg.toFixed(1)}</span>
+                          <CosmeRating cosme={p.cosme} size={10.5} />
                           <span style={{ fontSize: 10.5, color: "#9A938A" }}>¥{p.price.toLocaleString()}</span>
                           <a href={shoppingSearchUrl(p)} target="_blank" rel="noopener noreferrer" style={{ fontSize: 10.5, color: season.accent, textDecoration: "underline" }}>
                             楽天市場で探す
@@ -1209,11 +1239,18 @@ function RankingTab({ myType, ratingOf, favs, toggleFav, onGoDiagnosis }) {
   if (onlyMine && myType) list = list.filter((p) => p.seasons.includes(myType));
   list = list.map((p) => ({ ...p, ...ratingOf(p) }));
 
-  // 全カテゴリを混ぜて並べると種類がバラバラになるので、種類ごとに区切って各5位までにする
+  // 全カテゴリを混ぜて並べると種類がバラバラになるので、種類ごとに区切って各5位までにする。
+  // 並び順の根拠は @cosme の実評価。評価データがない商品は順位を付けられないので末尾に置く。
+  const byCosme = (a, b) => {
+    if (!a.cosme && !b.cosme) return 0;
+    if (!a.cosme) return 1;
+    if (!b.cosme) return -1;
+    return b.cosme.rating - a.cosme.rating || b.cosme.count - a.cosme.count;
+  };
   const groups = CATS.filter((c) => c !== "すべて")
     .map((c) => ({
       cat: c,
-      items: list.filter((p) => p.cat === c).sort((a, b) => b.avg - a.avg).slice(0, TOP_N),
+      items: list.filter((p) => p.cat === c).sort(byCosme).slice(0, TOP_N),
     }))
     .filter((g) => g.items.length > 0);
 
@@ -1301,13 +1338,19 @@ function RankingTab({ myType, ratingOf, favs, toggleFav, onGoDiagnosis }) {
                   <p style={{ fontSize: 10.5, color: "#9A938A", margin: 0 }}>{p.brand}</p>
                   <p style={{ fontSize: 13.5, fontWeight: 700, margin: "2px 0 4px", lineHeight: 1.4 }}>{p.name}</p>
                   <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-                    <Stars value={p.avg} />
-                    <span style={{ fontSize: 11.5, color: "#6E675F" }}>{p.avg.toFixed(1)}({p.count}件)</span>
+                    <CosmeRating cosme={p.cosme} />
                     <span style={{ fontSize: 11.5, color: "#9A938A" }}>¥{p.price.toLocaleString()}</span>
                     <a href={shoppingSearchUrl(p)} target="_blank" rel="noopener noreferrer" style={{ fontSize: 11.5, color: "#B3612F", textDecoration: "underline" }}>
                       楽天市場で探す
                     </a>
                   </div>
+                  {p.userCount > 0 && (
+                    <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 4 }}>
+                      <span style={{ fontSize: 10, color: "#B0A99F" }}>アプリ内の口コミ</span>
+                      <Stars value={p.userAvg} size={11} />
+                      <span style={{ fontSize: 10.5, color: "#6E675F" }}>{p.userAvg.toFixed(1)}({p.userCount}件)</span>
+                    </div>
+                  )}
                   <div style={{ display: "flex", gap: 4, marginTop: 5 }}>
                     {p.seasons.map((s) => (
                       <span key={s} style={{ fontSize: 9.5, background: SEASONS[s].soft, color: SEASONS[s].accent, borderRadius: 999, padding: "2px 8px", fontWeight: 700 }}>
@@ -1325,7 +1368,7 @@ function RankingTab({ myType, ratingOf, favs, toggleFav, onGoDiagnosis }) {
         <p style={{ textAlign: "center", fontSize: 13, color: "#9A938A", padding: "30px 0" }}>該当するコスメがありませんでした。</p>
       )}
       <p style={{ fontSize: 11, color: "#B0A99F", textAlign: "center", marginTop: 16, lineHeight: 1.8 }}>
-        ※ 商品・価格は実在しますが、<strong style={{ color: "#B3402B" }}>星評価と件数は仮の数字で、実際の評判とは関係ありません</strong>(順位も同様です)。現在、実際の評価に差し替える作業を進めています。価格は変動するため、購入前に販売ページでご確認ください。
+        ※ 順位は <a href="https://www.cosme.net/" target="_blank" rel="noopener noreferrer" style={{ color: "#6E675F" }}>@cosme</a> に掲載されている評価(7点満点){COSME_FETCHED_AT}にもとづきます。評価はシリーズ単位のため、色ごとの違いは反映されません。件数は日々増えるため最新の数値は各リンク先をご確認ください。「アプリ内の口コミ」はこの端末に保存されたあなたの投稿で、@cosme の評価とは別集計です。価格は変動するため購入前に販売ページでご確認ください。
       </p>
     </div>
   );
@@ -1339,7 +1382,7 @@ function MyPageTab({ myType, myDiag, favs, toggleFav, ratingOf, onGoDiagnosis })
   const recommended = myType
     ? PRODUCTS.filter((p) => p.seasons.includes(myType))
         .map((p) => ({ ...p, ...ratingOf(p) }))
-        .sort((a, b) => b.avg - a.avg)
+        .sort((a, b) => (b.cosme?.rating ?? -1) - (a.cosme?.rating ?? -1))
     : [];
   // カテゴリ別にまとめる
   const byCat = {};
@@ -1363,8 +1406,7 @@ function MyPageTab({ myType, myDiag, favs, toggleFav, ratingOf, onGoDiagnosis })
         <p style={{ fontSize: 10, color: "#9A938A", margin: 0 }}>{p.brand} / {p.cat}</p>
         <p style={{ fontSize: 12.5, fontWeight: 700, margin: "2px 0 3px", lineHeight: 1.4 }}>{p.name}</p>
         <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
-          <Stars value={p.avg} size={11} />
-          <span style={{ fontSize: 10.5, color: "#6E675F" }}>{p.avg.toFixed(1)}</span>
+          <CosmeRating cosme={p.cosme} size={10.5} />
           <span style={{ fontSize: 10.5, color: "#9A938A" }}>¥{p.price.toLocaleString()}</span>
           <a href={shoppingSearchUrl(p)} target="_blank" rel="noopener noreferrer" style={{ fontSize: 10.5, color: "#B3612F", textDecoration: "underline" }}>
             楽天市場で探す
