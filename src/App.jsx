@@ -1325,7 +1325,7 @@ function RankingTab({ myType, ratingOf, favs, toggleFav, onGoDiagnosis }) {
         <p style={{ textAlign: "center", fontSize: 13, color: "#9A938A", padding: "30px 0" }}>該当するコスメがありませんでした。</p>
       )}
       <p style={{ fontSize: 11, color: "#B0A99F", textAlign: "center", marginTop: 16, lineHeight: 1.8 }}>
-        ※ 商品は実在のものですが、評価・口コミはこのアプリ内の初期値とユーザー投稿です。価格は変動する場合があるため、購入前に販売ページでご確認ください。
+        ※ 商品・価格は実在しますが、<strong style={{ color: "#B3402B" }}>星評価と件数は仮の数字で、実際の評判とは関係ありません</strong>(順位も同様です)。現在、実際の評価に差し替える作業を進めています。価格は変動するため、購入前に販売ページでご確認ください。
       </p>
     </div>
   );
