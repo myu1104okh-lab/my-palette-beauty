@@ -1232,10 +1232,14 @@ function RankingTab({ myType, ratingOf, favs, toggleFav, onGoDiagnosis }) {
   const [cat, setCat] = useState("すべて");
   const [brand, setBrand] = useState("すべて");
   const [onlyMine, setOnlyMine] = useState(false);
+  const [query, setQuery] = useState("");
 
   const TOP_N = 5; // 種類ごとに上位5位まで表示する
+  const q = query.trim().toLowerCase();
 
   let list = PRODUCTS.filter((p) => (cat === "すべて" || p.cat === cat) && (brand === "すべて" || p.brand === brand));
+  // 検索は商品名・ブランド・種類のどれかに一致すればよい(ブランド名だけ覚えている場合にも当たるように)
+  if (q) list = list.filter((p) => `${p.name} ${p.brand} ${p.cat}`.toLowerCase().includes(q));
   if (onlyMine && myType) list = list.filter((p) => p.seasons.includes(myType));
   list = list.map((p) => ({ ...p, ...ratingOf(p) }));
 
@@ -1247,16 +1251,43 @@ function RankingTab({ myType, ratingOf, favs, toggleFav, onGoDiagnosis }) {
     if (!b.cosme) return -1;
     return b.cosme.rating - a.cosme.rating || b.cosme.count - a.cosme.count;
   };
+  // 検索中は探している商品が5位の枠から漏れると意味がないので、上限を外して全件出す
   const groups = CATS.filter((c) => c !== "すべて")
-    .map((c) => ({
-      cat: c,
-      items: list.filter((p) => p.cat === c).sort(byCosme).slice(0, TOP_N),
-    }))
+    .map((c) => {
+      const items = list.filter((p) => p.cat === c).sort(byCosme);
+      return { cat: c, items: q ? items : items.slice(0, TOP_N) };
+    })
     .filter((g) => g.items.length > 0);
 
   return (
     <div className="fade-up">
       <h2 style={{ fontFamily: font.display, fontSize: 18, textAlign: "center", margin: "4px 0 14px" }}>コスメランキング</h2>
+
+      {/* 検索 */}
+      <div style={{ position: "relative", marginBottom: 12 }}>
+        <span style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", fontSize: 14, color: "#B0A99F" }}>🔍</span>
+        <input
+          type="search"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="商品名・ブランドで探す(例:ちふれ、リップ)"
+          aria-label="コスメを検索"
+          style={{
+            width: "100%", boxSizing: "border-box", padding: "11px 38px 11px 38px",
+            borderRadius: 999, border: "1px solid #E0DAD2", fontSize: 13, fontFamily: font.body,
+            background: "#FFF", color: "#33302C",
+          }}
+        />
+        {query && (
+          <button
+            onClick={() => setQuery("")}
+            aria-label="検索をクリア"
+            style={{ position: "absolute", right: 10, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", fontSize: 15, color: "#B0A99F", padding: 4, lineHeight: 1 }}
+          >
+            ✕
+          </button>
+        )}
+      </div>
 
       {/* フィルター */}
       <div style={{ display: "flex", gap: 8, flexWrap: "wrap", justifyContent: "center", marginBottom: 10 }}>
@@ -1318,7 +1349,9 @@ function RankingTab({ myType, ratingOf, favs, toggleFav, onGoDiagnosis }) {
         <div key={g.cat} style={{ marginBottom: 22 }}>
           <div style={{ display: "flex", alignItems: "baseline", gap: 8, margin: "0 0 8px" }}>
             <h3 style={{ fontFamily: font.display, fontSize: 16, margin: 0 }}>{g.cat}</h3>
-            <span style={{ fontSize: 10.5, color: "#B0A99F" }}>評価の高い順 TOP{g.items.length}</span>
+            <span style={{ fontSize: 10.5, color: "#B0A99F" }}>
+              {q ? `${g.items.length}件` : `評価の高い順 TOP${g.items.length}`}
+            </span>
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
             {g.items.map((p, i) => (
@@ -1365,7 +1398,16 @@ function RankingTab({ myType, ratingOf, favs, toggleFav, onGoDiagnosis }) {
         </div>
       ))}
       {groups.length === 0 && (
-        <p style={{ textAlign: "center", fontSize: 13, color: "#9A938A", padding: "30px 0" }}>該当するコスメがありませんでした。</p>
+        <div style={{ textAlign: "center", padding: "30px 0" }}>
+          <p style={{ fontSize: 13, color: "#9A938A", margin: 0, lineHeight: 1.9 }}>
+            {q ? `「${query}」に一致するコスメはありませんでした。` : "該当するコスメがありませんでした。"}
+          </p>
+          {q && (
+            <p style={{ fontSize: 11.5, color: "#B0A99F", margin: "6px 0 0", lineHeight: 1.9 }}>
+              取り扱いのないブランドかもしれません。絞り込みを解除すると全件表示されます。
+            </p>
+          )}
+        </div>
       )}
       <p style={{ fontSize: 11, color: "#B0A99F", textAlign: "center", marginTop: 16, lineHeight: 1.8 }}>
         ※ 順位は <a href="https://www.cosme.net/" target="_blank" rel="noopener noreferrer" style={{ color: "#6E675F" }}>@cosme</a> に掲載されている評価(7点満点){COSME_FETCHED_AT}にもとづきます。評価はシリーズ単位のため、色ごとの違いは反映されません。件数は日々増えるため最新の数値は各リンク先をご確認ください。「アプリ内の口コミ」はこの端末に保存されたあなたの投稿で、@cosme の評価とは別集計です。価格は変動するため購入前に販売ページでご確認ください。
@@ -1510,11 +1552,24 @@ function MyPageTab({ myType, myDiag, favs, toggleFav, ratingOf, onGoDiagnosis })
 // ---------------- 口コミタブ ----------------
 function ReviewTab({ reviews, addReview, myType, storageReady }) {
   const [productId, setProductId] = useState(PRODUCTS[0].id);
+  const [productQuery, setProductQuery] = useState("");
   const [rating, setRating] = useState(5);
   const [text, setText] = useState("");
   const [name, setName] = useState("");
   const [posted, setPosted] = useState(false);
   const listRef = useRef(null);
+
+  const pq = productQuery.trim().toLowerCase();
+  const matchedProducts = pq
+    ? PRODUCTS.filter((p) => `${p.name} ${p.brand} ${p.cat}`.toLowerCase().includes(pq))
+    : PRODUCTS;
+
+  // 絞り込みの結果、選択中の商品が候補から外れたら先頭に合わせる(見えない商品に投稿されるのを防ぐ)
+  useEffect(() => {
+    if (matchedProducts.length && !matchedProducts.some((p) => p.id === productId)) {
+      setProductId(matchedProducts[0].id);
+    }
+  }, [pq]);
 
   const submit = () => {
     if (!text.trim()) return;
@@ -1549,14 +1604,27 @@ function ReviewTab({ reviews, addReview, myType, storageReady }) {
       {/* 投稿フォーム */}
       <div style={{ background: "#FFF", borderRadius: 16, padding: "18px 18px 20px", boxShadow: "0 1px 8px rgba(0,0,0,0.04)", marginBottom: 20 }}>
         <label style={{ fontSize: 12, color: "#6E675F", display: "block", marginBottom: 4 }}>商品を選ぶ</label>
+        {/* 商品が増えると一覧から探すのが大変なので、絞り込み入力を用意する */}
+        <input
+          type="search"
+          value={productQuery}
+          onChange={(e) => setProductQuery(e.target.value)}
+          placeholder="商品名・ブランドで絞り込む"
+          aria-label="商品を絞り込む"
+          style={{ width: "100%", boxSizing: "border-box", padding: "9px 12px", borderRadius: 10, border: "1px solid #E0DAD2", fontSize: 12.5, fontFamily: font.body, marginBottom: 6 }}
+        />
         <select
           value={productId}
           onChange={(e) => setProductId(e.target.value)}
           style={{ width: "100%", padding: "10px 12px", borderRadius: 10, border: "1px solid #E0DAD2", fontSize: 13, fontFamily: font.body, background: "#FAF8F5" }}
         >
-          {PRODUCTS.map((p) => (
-            <option key={p.id} value={p.id}>{p.brand} / {p.name}</option>
-          ))}
+          {matchedProducts.length === 0 ? (
+            <option value="">該当する商品がありません</option>
+          ) : (
+            matchedProducts.map((p) => (
+              <option key={p.id} value={p.id}>{p.brand} / {p.name}</option>
+            ))
+          )}
         </select>
 
         <label style={{ fontSize: 12, color: "#6E675F", display: "block", margin: "14px 0 4px" }}>評価</label>
